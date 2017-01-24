@@ -1,0 +1,1278 @@
+%\documentclass{kuisthesis}			% 特別研究報告書
+\documentclass[master]{kuisthesis}		% 修士論文(和文)
+%\documentclass[master,english]{kuisthesis}	% 修士論文(英文)
+%\usepackage{ifpdf}
+%\usepackage{cite}
+%%\ifCLASSINFOpdf
+%%  %\usepackage[pdftex]{graphicx}
+%%  %\graphicspath{{../fig/}}
+%%\else
+%%  \usepackage[dvipdfmx]{graphicx}
+%%  %\graphicspath{{./fig/}}
+%%\fi
+%\usepackage[cmex10]{amsmath}
+%\usepackage{amssymb} % mathbb
+%\interdisplaylinepenalty=2500
+%\usepackage{array}
+%%\usepackage{algorithm}
+%%\usepackage{algorithmic}
+%%\usepackage{mdwmath}
+%%\usepackage{mdwtab}
+%%\usepackage{mathenv}
+%%\usepackage{eqparbox}
+%%\usepackage[tight,footnotesize]{subfigure}
+%\usepackage{fixltx2e}
+%%\usepackage{stfloats}
+%\usepackage{url}
+%\usepackage{tabularx}
+
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{latexsym}
+\usepackage[fleqn]{amsmath}
+\usepackage[psamsfonts]{amssymb}
+\usepackage{bm}
+\usepackage{txfonts}
+
+%\renewcommand{\includegraphics}[2][]{}
+%\renewcommand{\caption}[2][]{}
+%図表を表示するフラグ\figtab（0で非表示，1で表示）
+\newcount\figtab
+\figtab= 1
+%\ifnum \figtab=1  ~  \fiで囲む
+
+\def\ind{\mathop{\bm{1}}\nolimits}
+
+\def\LATEX{{\rm (L\kern-.36em\raise.3ex\hbox{\sc a})\TeX}}
+\def\LATex{\iLATEX\small}
+\def\iLATEX#1{L\kern-.36em\raise.3ex\hbox{#1\bf A}\kern-.15em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}
+\def\LATEXe{\ifx\LaTeXe\undefined \LaTeX 2e\else\LaTeXe\fi}
+\def\LATExe{\ifx\LaTeXe\undefined \iLATEX\scriptsize 2e\else\LaTeXe\fi}
+\let\EM\bf
+\def\|{\verb|}
+\def\<{\(\langle\)}
+\def\>{\(\rangle\)}
+\def\CS#1{{\tt\string#1}}
+
+\jtitle[高密度無線LANのための送信電力・キャリア検出しきい値反比例設定法]%	% 和文題目（内容梗概／目次用）
+	{高密度無線LANのための送信電力・キャリア検出しきい値反比例設定法}	% 和文題目
+\etitle{Inversely Proportional Transmission Power and Carrier Sense Threshold Setting in WLANs }	% 英文題目
+\jauthor{奥原 大智}				% 和文著者名
+\eauthor{Daichi OKUHARA}			% 英文著者名
+\supervisor{守倉 正博 教授}			% 指導教員名
+\date{平成28年2月8日}				% 提出年月日
+\department{通信情報システム}				% 修士論文の場合の専攻名
+
+\begin{document}
+\maketitle					% 「とびら」の出力
+
+\begin{jabstract}				% 和文梗概
+近年，モバイルルータや無線LAN（Local Area Network）端末数の増加により同一チャネルを使用する無線局の数が増加し，無線局間での干渉が増加している. 
+IEEE 802.11無線LANでは，CSMA/CA（Carrier Sense Multiple Access with Collision Avoidance）に基づきキャリア検出しきい値以上の信号を検出している際は送信を待機する必要があるため，システムスループットが過度に制限されている場合がある．
+この制約を緩和し，チャネル再利用を促進する手段として，送信電力制御やキャリア検出しきい値制御が知られている．
+
+本論文では，無線局間でスループットの不公平性を生じさせない送信電力・キャリア検出しきい値反比例設定法に着目し，反比例設定法の実現方法としてアッテネータを用いた方法を提案する．
+アッテネータを無線局とアンテナの間に接続することで送信電力と受信電力を同じ量だけ下げる．受信電力を下げることは等価的にキャリア検出しきい値を上げることになるため，アッテネータを用いることで反比例の関係を保ったまま無線局の送信電力とキャリア検出しきい値を変化させることができる．
+この方法により，スループットにおける不公平性を解決し，各無線局のスループットを増加させることができる．
+本論文では，まずアッテネータを用いた送信電力・キャリア検出しきい値反比例設定法により周波数利用効率が増加する条件を示す．
+また，周波数利用効率が増加することを2組の送受信局が存在するモデルを用いて数値評価により示す．
+次に数値評価に用いたモデルにおけるスループット増加を実験により確認するため，同軸ケーブル接続による有線実験環境を構築した．
+本実験系を用いて提案方式を用いた場合，スループットが増加することを示す．
+また，有線実験環境を用いて，提案方式を特定端末に使用した場合でもシステムスループットが増加することを示す．
+最後に無線実験系での実験を通し，アッテネータを用いた送信電力・キャリア検出しきい値反比例設定法により，システムスループットが増加すること，及び無線局間でのスループットの不公平性が発生しないことを示す．
+さらに無線実験系での結果より，無線局の送信電力あるいはキャリア検出しきい値の違いによって新たな不公平性が生じることを示す．
+
+ 
+%無線LAN端末数の増加により同一チャネルを使用する無線局数が増加し，無線局のスループットが減少するという問題が起きている．この問題を解決する方法として，送信電力制御やキャリア検出しきい値制御が知られている．本稿では，送信電力及びキャリア検出しきい値の制御方法として，アッテネータを用いた方法を提案する．アッテネータを無線局とアンテナの間に接続することで送信電力と受信電力を同じ量だけ下げる．受信電力を下げることは等価的にキャリア検出しきい値を上げることになるため，反比例の関係を保ったまま無線局の送信電力とキャリア検出しきい値を変化させることができる．この方法により，スループットにおける不公平性を解決し，無線局のスループットを増加させることができる．本稿では，アッテネータを用いた場合，スループットが増加する条件を示し，数値評価によって，スループットの増加量を示す．さらに，実験によってスループットが増加することを示す．
+
+\end{jabstract}
+
+\begin{eabstract}				% 英文梗概
+ %Inserting attenuators between transceivers and antennas is proposed to improve spatial channel reuse in carrier sense multiple access with collision avoidance based WLANs. 
+ The number of  wireless local area network (WLAN) devices has risen sharply and the increase leads high-density wireless networks with frequent interference, especially in urban areas.
+ To solve this problem, a number of methods involving transmission power and carrier sense threshold controls have been investigated.
+ 
+ This thesis proposes a scheme that employs attenuators to realize a joint transmission power and carrier sense threshold control. Inserting an attenuator between transceiver and an antenna improves spectral efficiency in carrier sense multiple access with collision avoidance (CSMA/CA)-based WLANs.
+ Using attenuators enables the access points or stations to decrease the power levels of transmission signals and received signals.
+ It equivalently results in the increase in the carrier sense threshold.
+ Thus, the attenuation value control enables inversely proportional setting of a transmission power level and a carrier sense threshold.
+  It is known to provide a novel solution for the unfairness problem caused by variable transmission power levels or variable carrier sense thresholds.
+ This thesis first derives a simple and useful sufficient condition that the aggregate spectral efficiency when attenuators are used is higher than that when they are not used.
+ Numerical analysis and testbed evaluations for using attenuators show that the theoretically derived sufficient condition is valid despite the approximations, and system throughput improvement is obtained.
+ Then, this thesis show the system throughput is improved even when attenuators are connected to a part of stations in an indoor environment.
+ The experiments on the testbed show that the proposed method achieve significant improvement in the aggregate throughput of the two transmitter-receiver pairs and does not cause the unfairness problem.
+ The result from the testbed also depicted a new unfairness problem due to an individual difference in transmission power or carrier sense threshold.
+%The number of  wireless local area network (WLAN) devices has risen sharply in recent times and has led to high-density wireless networks with frequent interference, especially in urban areas. To solve this problem, a number of methods involving transmission power and carrier sense threshold control have been investigated. In this paper, we propose a scheme that employs attenuators to realize joint transmission power and carrier sense threshold control. Inserting attenuators between transceivers and antennas improves spectral efficiency in carrier sense multiple access with collision avoidance (CSMA/CA)-based WLANs. This is because attenuation value control enables access points (APs) to correspondingly reduce the strengths of transmitted and received signals. Furthermore, a reduction in received signal strength is equivalent to an increase in the carrier sense threshold in the transceiver. Exploiting this inversely proportional relationship between transmission power and carrier sense threshold solves the unfairness problem caused by variable transmission power or variable carrier sense threshold. We first derive a sufficient condition such that the aggregate spectral efficiency is higher when attenuators are used than when they are not. We verify this sufficient condition through a numerical evaluation. We then describe a testbed for using attenuators, and an experiment on the testbed shows that our proposed method leads to a significant improvement in the aggregate throughput of the two transmitter-receiver pairs and does not cause the unfairness problem. 
+\end{eabstract}
+
+\tableofcontents				% 目次の出力
+
+
+
+\section{序論} \label{序章}		% 本文の開始
+近年，公衆無線LAN（Local Area Network）に加えて，テザリング端末やモバイルルータの増加により，特に都市部においてAP（Access Point）が急激に増加している．AP及びSTA（Station）が密に存在すると，これら無線局は同一チャネルを使用する他の無線局から多数の干渉を受ける．
+IEEE 802.11\cite{11}においてはCSMA/CA（Carrier Sense Multiple Access with Collision Avoidance）に基づき，無線局が受信した信号がその無線局のキャリア検出しきい値を上回っていれば，信号を検出したと判定し送信を待機する必要があり，システムスループットの制約となっている．
+
+この問題を緩和する手法として送信電力制御がある．
+前述のような環境下では，APとそれに接続されているSTAの距離は，当該APと他のAPの距離と比べて十分に小さい場合が多い．この場合，APの送信電力を下げることによりAPは互いに信号を検出しなくなり，同時に信号を送信することが可能となる\cite{APowerControlMAC,Apowercontrolled,performance_enhancement,performance_evaluation}．
+しかし，送信電力を下げた無線局は，送信電力を同程度に下げていない無線局から一方的に干渉を受け，スループットが低下する不公平性が生じる場合があることが指摘されている
+\cite{InterferenceMitigation}．
+この理由を以下に示す．無線局1と無線局2が存在する環境において，無線局1は無線局2より低い送信電力で信号を送信し，無線局1の信号は無線局2によって検出されず，無線局1は無線局2の信号を検出するものと仮定する．
+この場合，無線局2は無線局1の送信に関わらず送信が可能であり，一方で無線局1は無線局2が送信している間，送信を控える．
+したがって，無線局1は無線局2に比べて送信機会が少なくなる．
+この状況で無線局1に送信権を獲得させる一手段として，無線局1のキャリア検出しきい値の増大が挙げられる．具体的な方法としては，各無線局の送信電力とキャリア検出しきい値の積を等しくしつつ送信電力やキャリア検出しきい値を変化させるものがあり，この方法では無線局の送信機会の公平性が保たれることが知られている\cite{InterferenceMitigation}．
+これにより，送信機会の公平性を保ちつつ，チャネルの空間的再利用を促進することで，各無線局のスループットを増加させることができる．
+また，他にもキャリア検出しきい値を制御する研究が行われている\cite{CSMA_self,centralized_control,tuning_the_carrier}．
+%\cite{AdaptiveCSMAfor}では，無線局の受信感度とキャリア検出しきい値を同時に制御することによって，無線局のスループットを増加させる方法を提案している．
+キャリア検出しきい値は既存の無線LANでは固定であるが，次世代の無線LAN規格であるIEEE 802.11 axでは動的に変更することが見込まれている\cite{11ax_advanced_wireless,11ax_evaluation,11ax_next,analysis_of_the}．
+
+本論文では，送信電力とキャリア検出しきい値を反比例の関係で制御する方法としてアッテネータを無線局とアンテナの間に接続する方法を提案する．
+これにより，放射電力と受信電力が同時に減少する．これは，送信電力を下げ，キャリア検出しきい値を上げることと等価である．
+%また，アッテネータを用いる方法は，アンテナが取り外せるならば，既存のAPに対しても適用ができる．
+本論文では，アッテネータを用いた送信電力・キャリア検出しきい値反比例設定法により，2組の送受信局が存在するモデルにおいて周波数利用効率が増加することを示す．
+
+既存研究において，送信電力とキャリア検出しきい値を同時に制御した実験が行われており\cite{AdaptiveCSMAfor}，その中でも反比例設定法に着目した実験が行われている\cite{InterferenceMitigation}．
+しかし，これらの研究はすべての端末の送信電力及びキャリア検出しきい値を制御した実験であり，特定の端末のみを制御した実験は筆者の知る限りこれまでにない．
+そこで本論文では，2組の送受信局が存在するモデルを同軸ケーブルを用いて構築し，すべての送信局及びすべての受信局に提案方式を適用した場合の実験に加えて，片側の送受信局にのみを制御した場合，送信局のみを制御した場合の実験を行う．
+また無線実験系を用いて，提案方式によりシステムスループットが増加することを示す．
+
+本論文の構成について述べる．
+\ref{関連技術}では，関連技術について述べる．
+\ref{提案方式}では本論文の提案方式であるアッテネータを用いた送信電力及びキャリア検出しきい値制御について述べ，2組の送受信局が存在する簡単なモデルにおいて周波数利用効率が増加する条件を導出する．
+また，数値評価により周波数利用効率が増加することを示す．
+次に\ref{有線実験}で同軸ケーブル接続による有線実験環境の構築について述べ，商用の無線LAN端末を用いた実験を用いて，提案方式を用いた場合にスループットが増加することを示す．
+さらに，有線実験環境における実験を用いて，提案方式を特定端末にのみ適用した場合でもシステムスループットが増加することを示す．
+\ref{無線実験}では，無線実験系での実験を通し，提案方式によりシステムスループットが増大することを示す．
+さらに，無線実験系での結果より，無線局の送信電力あるいはキャリア検出しきい値の違いによって新たな不公平性が生じることを示す．
+最後に\ref{結論}で，まとめを述べる．
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%　 　　　　　　　関連技術
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{関連技術} \label{関連技術}
+本章では，本論文に関連する無線LAN技術\cite{musenlan}，数値評価で用いる通信路容量\cite{houshiki}，有線実験系で用いるフリスの公式ついて述べた後，既存研究について述べる．
+\subsection{無線LAN技術}
+本節では，無線LANの規格であるIEEE 802.11a規格及びIEEE 802.11g規格，無線LANのアクセス制御であるCSMA/CAについて述べ，最小受信感度について述べる．
+\subsubsection{IEEE 802.11a規格}
+1997年に5.15\,GHzから5.35\,GHzまでの帯域幅200\,MHz及び5.725\,GHzから5.825\,GHzまでの帯域幅100\,MHzの合計300\,MHzの帯域が免許不要の無線LANに開放されたことを受け，タスク・グループaが検討を開始し，1999年にIEEE 802.11a規格を策定した．
+IEEE 802.11a規格では，変調方式にOFDM（Orthogonal Frequency Division Multiplexing）方式を採用しており，最大の伝送速度は54\,Mbit/sである．
+\ref{有線実験}では，IEEE 802.11a規格を用いて実験を行う．
+
+\subsubsection{IEEE 802.11g規格}
+IEEE 802.11g規格はタスク・グループgが2003年に策定した規格である．
+IEEE 802.11g規格はIEEE 802.11b規格との互換性があり，IEEE 802.11a規格で策定されたOFDM方式とIEEE 802.11b規格で策定されたCCK（Complementary Code Keying）方式を必須方式としている．
+CCK方式では最大11\,Mbit/sの伝送速度を実現し，OFDM方式では最大54\,Mbit/sの伝送速度を実現する．
+IEEE 802.11a規格では5\,GHz帯を用いて通信を行うが，IEEE 802.11g規格ではISMバンドである2.4\,GHz帯を用いて通信を行う．
+\ref{無線実験}では，IEEE 802.11g規格を用いて実験を行う．
+
+\subsubsection{OFDM変調方式}
+OFDM変調方式は，1960年代に考案され，1980年代に欧州の地上波デジタル音声放送（DAB : Digital Audio Broadcasting）プロジェクトで適用されたほか，1990年代には欧州で標準化された地上波デジタル放送にも用いられた．
+また，OFDMによる高速無線LANは，オフィスや家庭でのネットワークの構築に用いられるだけでなく，公衆無線LANにも用いられている．
+
+IEEE 802.11無線LANでは，IEEE 802.11a/g規格の物理レイヤの無線伝送方式に，このOFDM変調方式が用いられている．OFDM変調方式では，高速なデータ信号をマルチキャリアの1つであるサブキャリアに複数に分割して伝送する．
+%マルチキャリア変調方式は，マルチパス干渉の影響を抑えることができるため，シングルキャリア変調方式では通信品質がマルチパス伝搬環境下でも，優れた特性を示す．
+ここで，キャリアとは，相手に情報を運ぶための搬送波であり，1つの搬送波を使用して無線通信を行う場合をシングルキャリア変調方式と呼び，複数の搬送波を使用する場合をマルチキャリア変調方式と呼ぶ．それぞれのサブキャリアの変調方式には，伝送レートに応じてBPSK（Binary Phase Shift Keying），QPSK（Quadrature Phase Shift Keying），16QAM（16-Quadrature Amplitude Modulation），64QAMが用いられる．IEEE 802.11a/g規格では，サブキャリア数は52本あり，そのうちの48本は情報伝送に用いられ，4本は受信の位相回転補助のために用いられる．
+
+無線LANの高速化を制限する最大の要因はマルチパス伝搬である．マルチパス伝搬とは，送信アンテナから送信された送信波が壁などに反射し，複数の経路を通って受信アンテナで受信される伝搬環境のことである．このマルチパス伝搬路において信号を受信する場合，遅延波が受信されるまでの時間がシンボル間隔に対して長いほど，また，遅延波の電力が大きいほど遅延波が受信に及ぼす影響が大きくなる．
+
+OFDM変調方式では，以下の理由により，このマルチパス伝搬環境において伝送速度を高速化することができる．OFDM変調方式は，高速のデータを複数の低速データ列に分割し，それぞれを複数あるサブキャリアに乗せて並列伝送を行う．複数の低速データに分割することで，各サブキャリア信号のシンボル時間が遅延波の受信されるまでの時間に対して相対的に長くなるので，遅延波の影響を抑えることができる．また，OFDM変調方式ではサブキャリア当たりの伝搬速度を低下させてマルチパス伝搬の影響を抑えるだけでなく，シンボル間にガードインターバルと呼ばれる冗長信号を挿入することで，マルチパス干渉の影響を抑えている．このガードインターバルを挿入することによって，受信信号のそれぞれのサブキャリアはマルチパス干渉により歪むことなく，信号レベルの変動の影響を受けるだけになる．信号電力が大きく低下しているサブキャリアは雑音の影響を受けやすいが，誤り訂正符号化と組み合わせることによって，影響を低減することができる．
+
+%IEEE 802.11a規格では，誤り復号にビタビ復号法を用いることを想定しており，畳み込み符号化を行うことが規定されている．また，IEEE 802.11a規格では複数の伝送速度が規定されており，伝送路の状態に応じて伝送レートを選択して利用する．一般的にはフレーム誤りの観測などによって自動的に伝送レートが選択される．この伝送レートはサブキャリア変調方式と畳み込み符号化の符号化率の組み合わせに応じて6\,Mbit/sから54\,Mbit/sの8種類の伝送レートが規定されている．ここで，符号化率とは伝送レートと無線変調速度の比によって表される．
+
+\subsubsection{CSMA/CA}
+IEEE 802.11無線LANでは，同一のチャネルを複数端末で共有するためのアクセス制御機能が実装されている．
+各無線局がチャネルの使用状況を確認し自律的にデータフレームの送信タイミングを決定するDCF（Distributed Coordination Function）とオプションであるPCF（Point Coordination Function）が定義されている．
+PCFでは，無線セル内においてポーリングに基づく集中制御によるアクセス制御が行われる．
+ポーリングとは基地局が各端末に順番にポーリング信号を送信し，基地局からポーリング信号を受け取った端末だけがフレームの送信を許可されるアクセス制御方式である．
+DCFでは端末が自律的にフレームの送信タイミングを決定するが，このときのアクセス制御プロトコルにCSMA/CAが用いられる．
+\ref{提案方式}，\ref{有線実験}，\ref{無線実験}ではDCFを扱う．
+
+CSMA/CAは，フレームの送信に先立ってそれぞれの無線局が事前にキャリア検出を行い，無線チャネルの使用状況を確認し，他の無線局からの信号を検出している間，自身はデータフレームを送信しないことによってデータフレームの衝突を回避する．
+新たにフレーム送信要求が発生した無線局はキャリア検出を行い，チャネルがアイドル状態であれば，チャネルを他の無線局が使用していないと判断し，送信を開始する．
+チャネルがビジー状態であれば，アイドル状態になるまで送信をしない．
+ここで，アイドル状態とはチャネルが他の無線局によって使用されている状態であり，ビジー状態とはチャネルが他の無線局によって使用されていない状態である．
+無線局はキャリア検出しきい値以上の干渉電力を受信すると，チャネルがビジー状態であると判断し，キャリア検出しきい値未満の電力を受信するとチャネルがアイドル状態であると判断する．
+
+IEEE 802.11規格において，信号を送信する前に最低限の送出信号間隔としてIFS（Interframe Space）が定義されている．
+キャリア検出を効果的に行うため，IFSの長さは複数定義されている．
+IFSには最優先権の送出信号間隔であるSIFS（Short IFS），送出信号間間隔が短く優先権の高いPIFS（PCF IFS），さらに，送出信号間間隔が長く優先権の低いDIFS（DCF ISF）がある．
+ビジー状態からアイドル状態への移行後DIFSの時間だけ待ち，さらにバックオフというランダムな時間のキャリア検出を行い，継続してアイドル状態であることを確認した無線局のみがデータフレームの送信権を得ることができる．
+データフレームを正常に受信したことを知らせるACK（ACKnowledgment）フレームを最優先のSIFS時間を用いて送信する．
+最優先であるSIFS時間を用いることで，データフレームを受信した無線局は他の無線局に割り込まれることなくACKフレームを送信することができ，通信を完了する．
+
+ここで，先に述べたバックオフ制御について述べる．
+バックオフ制御はキャリア検出と共に衝突を回避するための方法として，IEEE 802.11規格で定められている．
+バックオフ制御では，フレームを送信しようとする無線局は，チャネルがDIFS時間アイドル状態になった後，規定のCW（Contention Window）範囲内で乱数を発生させ，その乱数値をもとにしたバックオフ時間だけ送信を待機する．
+バックオフ時間とは生成された乱数とスロットタイムの積で表される．
+バックオフ制御のCWは，最小値が$\mathrm{CW_{min}}$と最大値が$\mathrm{CW_{max}}$の値の範囲内の整数であり，フレームの衝突などによる再送ごとに次式で更新される．
+\begin{equation}
+\mathrm{CW} = (\mathrm{CWmin} + 1) \times 2^{n} - 1
+\end{equation}
+ただし，$n$は再送回数である．この式に従い再送ごとにCWを増加させることで，フレーム再衝突の確率を減少させる．再送回数があらかじめ決められた最大再送回数に達した場合は，フレームが破棄される．フレームの送信に成功した場合とフレームを破棄した場合にCWは$\mathrm{CW_{min}}$に初期化される．
+
+CSMA/CAでは，隠れ端末が存在するとキャリア検出が有効に機能しないため，データフレームの衝突が避けられずスループットが低下する．
+隠れ端末によるスループット低下は，以下の理由により発生する．
+例えば，送信局1，送信局2，受信局3が存在し，送信局1と送信局2が互いにキャリア検出できない環境を考える．
+このとき，送信局1は送信局2がチャネルを使用していることを検出することができず，送信局2が受信局3へデータフレームを送信しているにも関わらず，送信局1も受信局3へデータフレームの送信を行うことで，受信局においてデータフレームの衝突が発生する．
+IEEE 802.11規格では隠れ端末が存在する環境において，データフレーム衝突によるスループット低下を避けるため，RTS（Request To Send）フレーム及びCTS（Clear To Send）フレームの送信機能が定義されている．
+RTSフレーム，CTSフレームによりデータフレームの衝突を回避できる理由を以下に示す．
+前述した環境において，送信局1はDIFS時間及びバックオフ時間キャリア検出した後，RTSフレームを受信局3へ送信する．
+RTSフレームを受信した受信局3はSIFS時間後に送信局1へCTSフレームを送信する．
+このとき受信局3が送信したCTSフレームは送信局2も受信することができる．
+RTSフレーム，CTSフレームにはチャネルを占有する予定期間が記載されているデュレーションフィールドがあるため，送信局2はCTSフレームに記載されている期間だけ送信を待機することによりデータフレームの衝突を回避することができる．
+隠れ端末が存在する環境では，データフレームのペイロード長が大きいほどデータフレームの衝突する確率が高くなるため，送信するデータフレームのペイロード長がRTSしきい値を超える場合に，RTSフレーム，CTSフレームの送信を行う．
+\ref{有線実験}で用いる無線局はRTSしきい値を設定することが可能であり，RTSしきい値をペイロード長より短い値に設定し，RTSフレーム，CTSフレームの送信を行うよう設定し実験を行う．
+
+\subsubsection{最小受信感度}\label{最小受信感度}
+IEEE 802.11aでのOFDMの受信特性規定を表\ref{sens}に示す\cite{musenlan}．
+表\ref{sens}における最小受信感度は，1000\,Bのパケットを伝送した場合にパケット誤り率が10\%となる受信電力として規定されている．
+これらの最小受信感度は，マルチパス伝搬などの実伝搬環境ではなく，無線LAN端末を同軸ケーブルで接続することより実現できる理想的な伝搬環境での規定である．
+
+詳細は\ref{Friis}で述べるが，自由空間における自由空間伝搬損$L_s$は$L_\mathrm{s} = (4\pi d)^2/\lambda$と表されるため，単位をデシベルに置き換えると以下の式で表される．
+\begin{equation}
+\label{los}
+L_s = 20\log_{10}{\left(\frac{4\pi d}{\lambda}\right)}
+\end{equation}
+表\ref{sens}より24\,Mbit/sの最小受信感度は$-$74\,dBであり，送信局の送信電力を10\,dBm，送信局及び受信局のアンテナ利得を0\,dBiとするとき許容伝送損失$L_s$は84\,dBとなる．
+このとき，IEEE 802.11a無線LAN端末で5\,GHz帯を用いると仮定すると，24\,Mbit/sの最小受信感度を満たす84\,dBの伝搬損失に相当する距離は式(\ref{los})より76\,mと求められる．
+
+\ifnum \figtab=1
+\begin{table}[t]
+\caption{IEEE 802.11aでのOFDMの受信特性規定}
+\label{sens}
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+伝送レート & 最小受信感度 \\\hline
+6\,Mbit/s & $-$82\,dBm \\
+9\,Mbit/s & $-$81\,dBm \\
+12\,Mbit/s & $-$79\,dBm \\
+18\,Mbit/s & $-$77\,dBm \\
+24\,Mbit/s & $-$74\,dBm \\
+36\,Mbit/s & $-$70\,dBm \\
+48\,Mbit/s & $-$66\,dBm \\
+54\,Mbit/s & $-$65\,dBm \\
+\hline 
+\end{tabular}
+\end{center}
+\end{table}
+\fi
+
+\subsection{通信路容量}
+\label{tsuusinro}
+通信路の入出力$X$，$Y$の相互情報量は伝送できた情報量を表し，$I(X;Y)$と表す．また信号$X$の確率密度関数を$p(x)$とすると，通信路容量$C$は以下の式で表される．
+\begin{equation}
+C = \max_{p(x)} I (X;Y)
+\end{equation}
+
+また，通信路容量に対しては以下の通信路符号化定理が成り立つ．通信路容量を$C$，伝送速度を$R$とする．$R < C$であれば，任意に小さい誤り率を実現する通信路符号化法が存在し，$R > C$であれば，そのような符号は通信路符号化法は存在しない．
+
+ここで，白色ガウス雑音通信路の通信路容量を求める．このためには，情報源$Y$のエントロピーを$H(Y)$，$Y$で条件を付けた$X$の条件付きエントロピーを$H(X\mid Y)$とすると，$I(X;Y) = H(Y) - H(Y\mid X)$を$p(x)$について最大にすればよい．ここで入力$X$に対して，平均電力$N$の白色ガウス雑音源から発生する雑音$Z$が加わり，$Y = X + Z$が出力される通信路において通信路の条件付き確率分布は次式で表される．
+\begin{equation}
+\label{p_yx}
+p(y\mid x) = \frac{1}{\sqrt{2\pi N}}\exp\left\{{-\frac{(y - x)^2}{2N}}\right\}
+\end{equation}
+また，現実の通信路では無制限に大きな入力を入れることができないため，制約条件から次式が成り立つ．
+\begin{equation}
+\label{x2S}
+\overline{X^2} \leq S
+\end{equation}
+ただし，$\overline{X^2}$は入力の2乗平均値であり，$S$は信号電力である．
+\begin{equation}
+\label{H_YX}
+H(Y\mid X) = -\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}p(y|x)\log_2 p(y|x)\mathrm\,{d}x\,\mathrm{d}y
+\end{equation}
+式(\ref{H_YX})に式(\ref{p_yx})を代入すると，次式で表される．
+\begin{equation}
+\label{H_YX2}
+H(Y\mid X) = \log_2 \sqrt{2\pi \mathrm{e}N}
+\end{equation}
+これは，$p(x)$には無関係である．よって，$I(X;Y)$を最大にするためには$H(Y)$を最大にすればよい．入力$X$と白色ガウス雑音$Z$は独立しているため出力$Y$は次式で表される．
+\begin{equation}
+\overline{Y^2} = \overline{X^2} + \overline{Z^2} = \overline{X^2} + N
+\end{equation}
+ただし，$N$は雑音電力である．また式(\ref{x2S})より以下の式が得られる．
+\begin{equation}
+\label{Y2SN}
+\overline{Y^2} \leq S + N
+\end{equation}
+式(\ref{Y2SN})の条件で$H(Y)$を最大にするためには，最大エントロピー定理より$Y$の分布を分散$S + N$のガウス分布にすればよい．よって，入力$X$を分散$S$のガウス分布に従う確率変数とすればよく，このとき以下の式で表される．
+\begin{equation}
+\label{HY}
+H(Y) = \log_2 \sqrt{2\pi \mathrm{e}(S + N)}
+\end{equation}
+ゆえに，通信路容量は式(\ref{HY})と式(\ref{H_YX2})から次式で表される．
+\begin{equation}
+\label{C}
+C = \frac{1}{2}\log_2 \left(1 + \frac{S}{N}\right)
+\end{equation}
+さらに，ガウス雑音の雑音電力密度を$N_0$，帯域幅を$W$とすると式(\ref{C})は次式で表される．
+\begin{equation}
+C = W\log_2 \left(1 + \frac{S}{N_0W}\right)
+\end{equation}
+また，周波数利用効率を単位帯域幅当たりの通信路容量と定義すると，以下の式で表される．
+\begin{equation}
+\label{SNR}
+\frac{C}{W} = \log_2 \left(1 + \frac{P}{N_0W}\right) = \log_2 (1 + \mathrm{SNR})
+\end{equation}
+ただし，SNR（Signal-to-Noise power Ratio）は$P/N_0W$としている．
+
+\subsection{フリスの伝達公式}
+\label{Friis}
+自由空間において，微小点から全方向に送信電力$P_\mathrm{t}$で電波が放射されている場合を考える．ここで，波源を中心とした半径$d$の球を考える．波源から放射された電波は，すべて距離$d$における球の表面を通るため，表面での電力の合計値は$P_\mathrm{t}$となる．また，距離$d$における表面積は$4\pi d^2$であるため，この球上での電力密度は$P_\mathrm{t}/4\pi d^2$となる．$A_\mathrm{r}$を受信アンテナの有効断面積とすると，この球上にある受信アンテナの受信電力は次式で表される．
+\begin{equation}
+P_\mathrm{r} = \frac{A_\mathrm{t}P_\mathrm{t}}{4\pi d^2} 
+\end{equation}
+ここで，波長を$\lambda$とすると，受信アンテナの有効断面積$A_\mathrm{r}$とアンテナ利得$G_\mathrm{r}$の間には$G_\mathrm{r} = 4\pi A_\mathrm{r}/\lambda^2$の関係があるため，以下の式で表される．
+\begin{equation}
+P_\mathrm{r} = \frac{G_\mathrm{r}P_\mathrm{t}}{(4\pi d/\lambda)^2} 
+\end{equation}
+次に，アンテナに指向性がある場合を考える．指向性がある場合のアンテナ利得と等方性アンテナ利得との比を$G_\mathrm{t}$とする．よって，指向性のあるアンテナを用いた場合，距離$d$における受信電力は次式で表される．
+\begin{equation}
+\label{friis}
+P_\mathrm{r} = \frac{G_\mathrm{r}G_\mathrm{t}P_\mathrm{t}}{(4\pi d/\lambda)^2} = \frac{G_\mathrm{r}G_\mathrm{t}P_\mathrm{t}}{L_\mathrm{s}}
+\end{equation}
+ただし，$L_\mathrm{s} = (4\pi d)^2/\lambda$とおいた．式(\ref{friis})をフリスの伝達公式と呼び，デシベル表記すると以下の式で与えられる．
+\begin{equation}
+\label{friis_1}
+(P_\mathrm{r})_{\mathrm{dB}} = (P_\mathrm{t})_{\mathrm{dB}} + (G_\mathrm{t})_{\mathrm{dB}} + (G_\mathrm{r})_{\mathrm{dB}} - (L_\mathrm{s})_{\mathrm{dB}}
+\end{equation}
+また，$L_\mathrm{s}$は伝搬損と呼ばれる．一般に伝送路が自由空間でない場合は，伝搬損は距離の2乗から4乗に比例することが知られている．
+
+\subsection{関連研究}
+本節では，本研究に関連するキャプチャ効果について述べ，送信電力制御やキャリア検出しきい値制御に関する既存研究について述べる．
+\subsubsection{キャプチャ効果}\label{キャプチャ効果}
+キャプチャ効果は，高密度無線LANにおいて，スループットに大きく影響を及ぼす現象であり，キャプチャ効果に関する様々な研究が行われている\cite{capture_effect_in_IEEE,exploiting_the_capture}．
+キャプチャ効果は以下のような現象である．
+複数の送信局がデータフレームを同時に送信した場合，ある受信局において所望信号電力が干渉信号電力の総和より十分大きいとき，つまりSIR（Signal to Interference Power Ratio）が十分大きいとき確率的に所望信号のデータフレームの受信に成功する\cite{capture_effect_throughput}．
+キャプチャ効果が起こる状況として，以下の3つの場合がある\cite{wintech2007}．
+\begin{itemize}
+\item 受信局において，所望信号のデータフレームを受信中に干渉信号のデータフレームが到着する場合
+\item 受信局において，干渉信号のデータフレームを受信中に所望信号のデータフレームが到着する場合．
+ただし，受信局は所望信号のデータフレームが到着する前に干渉信号のデータフレームを読み取れているものとする
+\item 受信局が読み取りに失敗した干渉信号のデータフレームを引き続き受信中に所望信号のデータフレームが到着する場合
+\end{itemize}
+文献\cite{wintech2007}では，伝送レートが54\,Mbit/sのとき，3つの全ての場合においてSIRが16\,dB以上でキャプチャ効果が起きることを示している．
+またSIRが24\,dBのとき，受信局において所望信号のデータフレームと干渉信号のデータフレームが衝突した場合でも所望信号のデータフレームの90\%がキャプチャ効果により受信できることを明らかにしている．
+文献\cite{capture_effect_throughput}では，2組の送受信局が存在する環境において，2つの送信局がお互いに干渉信号を検出している場合，キャプチャ効果が生じるときのシステムスループットがキャプチャ効果が生じていない場合のシステムスループットと比べ10\%程度\cite{capture_effect_throughput}増加していることを示している．
+
+\subsubsection{送信電力・キャリア検出しきい値制御}
+本項では，送信電力制御及びキャリア検出しきい値に関連する既存研究について述べる．
+送信電力制御では，無線局の送信電力を制御することで競合している無線局同士が同時にデータフレームを送信できるようになり，チャネルの空間的利用効率が向上する\cite{APowerControlMAC,Apowercontrolled,performance_enhancement,performance_evaluation}．
+文献\cite{APowerControlMAC}では，無線局がRTSフレーム, CTSフレームさらにデータフレームを最大電力で送信し，ACKフレームを最小電力で送信することでACKフレームによるスループットの低下を抑えつつ，電力消費を削減できることを示している．
+また，文献\cite{Apowercontrolled}では，アドホックネットワークにおいてスループットを改善しつつ消費電力を抑える方法を提案している．
+文献\cite{performance_enhancement}では，送信電力制御によりデータフレームを競合端末が検知できないよう設定した上で， NAV（Network Allocation Vector）期間をリセットする適当なタイマー情報が記載されている RTS フレームを競合端末に検知させることを提案している．これにより競合端末はデータフレームの同時送信が可能となり，チャネルの空間的再利用が促進されることを示している.
+このとき，送信電力制御はビーコンフレームと各端末間で共有している伝搬損の情報に基づき行われる．
+
+キャリア検出しきい値制御は，無線局のキャリア検出しきい値を制御することで，チャネルの再利用を促進する制御である\cite{AdaptiveCSMAfor,centralized_control,tuning_the_carrier}．
+文献\cite{AdaptiveCSMAfor}では，キャプチャ効果を考慮したモデルにおいて，無線局のキャリア検出しきい値と受信感度を制御することで，システムスループットが増加することを示している．
+文献\cite{centralized_control}では，集中制御によって，端末でのSINRをもとにキャリア検出しきい値とチャネル幅を同時に最適化することを提案し，この手法により周波数利用効率及びネットワーク容量が改善することが示されている．
+
+しかし，これらの手法ではすべての無線局が送信電力及びキャリア検出しきい値を変更することを想定しており，送信電力を制御できない無線局が存在した場合にスループットの不公平性が生じる可能性がある．
+本論文では，すべての無線局の送信電力及びキャリア検出しきい値を制御する場合に加え，特定の端末のみを制御した場合についても検討する．
+%%%%%%%%%%%%%%%%%%%%%%%%
+%　　　　　　　　数値評価
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{アッテネータを用いた送信電力・キャリア検出しきい値反比例設定法の評価} \label{提案方式}
+本章では，本論文で提案する，アッテネータを用いた送信電力制御及びキャリア検出しきい値制御について述べた後，提案方式を用いた場合に周波数利用効率が増加する条件を導出する．
+さらに，アッテネータを用いた制御を行う場合の各端末の周波数利用効率を計算する．
+\subsection{送信電力・キャリア検出しきい値反比例設定法}\label{反比例}
+本節では，送信電力とキャリア検出しきい値を反比例の関係で変更する送信電力・キャリア検出しきい値反比例設定法について述べる．
+%アッテネータを用いた制御では，送信電力とキャリア検出しきい値を等しく変化させることができるため無線局間でのスループットの不公平性を解決することができる．この理由を以下に示す．
+
+無線局$i$，$j$の送信電力をそれぞれ$P_i$，$P_j$とし，キャリア検出しきい値をそれぞれ$T_i$，$T_j$とする．
+また無線局$i$と無線局$j$における熱雑音電力を共に$N$，$C$を定数とすると，送信電力・キャリア検出しきい値反比例設定法とは以下の式を満たす設定法である．
+\begin{equation}
+\label{Palpha}
+P_i\alpha_i = C
+\end{equation}
+ここで，$\alpha_i$は以下の式を満たす変数である．
+\begin{equation}
+\label{alpha1}
+T_i = (\alpha_i + 1)N 
+\end{equation}
+キャリア検出しきい値は，熱雑音電力より十分大きな値であるため，$\alpha_i$は1より十分大きい値である．
+よって，式(\ref{alpha1})より$T_i \simeq \alpha_iN$と近似することができる．
+したがって，式(\ref{Palpha})は無線局の送信電力とキャリア検出しきい値が反比例の関係であることを表す．
+
+送信電力・キャリア検出しきい値反比例設定法が無線局間でのスループットの不公平性を発生させないことを示す．
+本論文では，以下の問題を無線局間でのスループットの不公平性と呼ぶ．
+複数の無線局がチャネルを共有している場合，無線局の送信電力やキャリア検出しきい値の違い，無線局間のチャネル利得の違いにより，特定の無線局が他の無線局から一方的に干渉を受け，送信を待機する．
+この結果，特定の無線局のスループットが著しく低下するという現象が発生する\cite{starvation_modeling}．
+
+無線局間で不公平性が発生しない条件は以下の2つの式のいずれかを満たすことである．
+\begin{equation}
+\label{sym1}
+N + P_i G_{ji} \geq T_j  \Leftrightarrow  N + P_j G_{ij} \geq T_i%
+\end{equation}
+\begin{equation}
+\label{sym2}
+N + P_i G_{ji} < T_j  \Leftrightarrow  N + P_j G_{ij} < T_i
+\end{equation}
+ただし，$G_{ji}$は無線局$i$から無線局$j$へのチャネル利得であり，$G_{ij}$無線局$j$から無線局$i$へのチャネル利得である．
+%このとき，チャネルは対称であるとし$G_{21} = G_{12}$とする．
+式(\ref{sym1})は無線局$i$と無線局$j$が共に互いの信号を検知することを表す．
+また，式(\ref{sym2})は無線局$i$と無線局$j$が共に互いの信号を検知しないことを表す．
+したがって，式(\ref{sym1})，式(\ref{sym2})のいずれかを満たしていれば，無線局$i$あるいは無線局$j$のどちらか一方のみが送信待機を行うことがなく，スループットの不公平性が発生しない．
+
+次に，送信電力・キャリア検出しきい値反比例設定法を用いると，式(\ref{sym1})を満たすことを示す．
+ただし，式(\ref{sym2})については検討しない．
+なぜなら，式(\ref{sym2})が成り立つとき送信電力・キャリア検出しきい値反比例設定法を用いなくても同時送信を行うことができるためである．
+式(\ref{alpha1})を用いると，式(\ref{sym1})は以下のように表される．
+\begin{equation}
+\label{1}
+ P_i G_{ji} \geq \alpha_jN  \Leftrightarrow   P_j G_{ij} \geq \alpha_iN
+\end{equation}
+また，式(\ref{1})は以下のように変形できる．
+\begin{equation}
+\label{last}
+\frac{G_{ji}}{N} \geq \frac{\alpha_j}{P_i}  \Leftrightarrow  \frac{G_{ij}}{N} \geq \frac{\alpha_i}{P_j}
+\end{equation}
+もし，チャネルが対称である場合，すなわち$G_{ij}=G_{ji}$の場合，無線局$i$と無線局$j$が共に式(\ref{Palpha})を満たしていれば式(\ref{last})が成り立つ．
+したがって，チャネルが対称である場合，送信電力・キャリア検出しきい値反比例設定法を用いるとスループットの不公平性は発生しない．
+%ただし，送信電力・キャリア検出しきい値反比例設定法を無線局に用いていない場合に，すべての無線局が式(\ref{Palpha})を満たしている必要がある．
+
+\subsection{アッテネータを用いた送信電力・キャリア検出しきい値反比例設定法}
+本節では，アッテネータを端末とアンテナの間に接続することで，送信電力・キャリア検出しきい値反比例設定法が実現できることを示す．
+無線局間でスループットの不公平性が発生しないためには，無線局があらかじめ式(\ref{Palpha})を満たしておく必要がある．
+そのため，無線局$i$と無線局$j$の送信電力とキャリア検出しきい値をそれぞれ共通の値とし，それぞれ$P$，$T$と仮定する．
+無線局$i$に接続されたアッテネータの減衰量を$a_i\,(a_i\geq 1)$とする．
+アッテネータを接続した場合，無線局の放射電力が接続したアッテネータの減衰量分だけ減少する．
+これは等価的にアッテネータを接続することなく無線局の放射電力をアッテネータの減衰量分だけ低下させることになる．
+すなわち，無線局$i$の等価的な放射電力$P'_i$は以下の式で表される．
+\begin{align}
+P'_i = \frac{P}{a_i} 
+\end{align}
+また，アッテネータを接続した場合，無線局の受信電力が接続したアッテネータの減衰量分だけ減少する．
+これは等価的にアッテネータを接続することなく無線局のキャリア検出しきい値をアッテネータの減衰量分だけ増加させることになる．
+すなわち，無線局$i$の等価的な放射電力$T'_i$は以下の式で表される．
+\begin{align}
+T'_i = Ta_i 
+\end{align}
+アッテネータを無線局$i$，$j$に接続した場合，式(\ref{sym1})は以下のように表すことができる．
+\begin{align}\label{しきい値との関係}
+N + \frac{P_i G_{ji}}{a_ia_j} \geq T  \Leftrightarrow  N + \frac{P_j G_{ij}}{a_ja_i} \geq T
+\end{align}
+式(\ref{しきい値との関係})の左辺の不等式は無線局$j$において，無線局$i$からの信号電力がアッテネータの減衰量$a_i$及び$a_j$の分だけ減衰することを表す．
+また，右辺の不等式は無線局$i$において，無線局$j$からの信号電力がアッテネータの減衰量$a_j$及び$a_i$だけ減衰することを表す．
+式(\ref{しきい値との関係})は
+\begin{align}\label{しきい値との関係2}
+\frac{P_iG_{ji}}{a_i} \geq T a_j - Na_j  \Leftrightarrow  \frac{P_j G_{ij}}{a_j} \geq Ta_i - Na_i 
+\end{align}
+と変形できる．
+式(\ref{しきい値との関係2})はアッテネータを接続していないと仮定したときの送信電力を$P_i$，$P_j$，等価的なキャリア検出しきい値$T'_i$，$T'_j$とすると
+\begin{align}\label{しきい値との関係3}
+{P'_i G_{ji}} \geq T'_j - Na_j  \Leftrightarrow  {P'_j G_{ij}} \geq T'_i - Na_i 
+\end{align}
+と表される．
+%$P'_i$，$T'_i$は式(\ref{Palpha})を満たしている．
+式(\ref{しきい値との関係3})より，熱雑音電力$N$が無線局$i$及び$j$のキャリア検出しきい値$T'_i$，$T'_j$より十分小さいと仮定すると，アッテネータを端末とアンテナの間に接続することで，アッテネータの減衰量分だけ等価的に無線局の放射電力を減少させ，またキャリア検出しきい値を増加させるため，送信電力・キャリア検出しきい値反比例設定法が実現できる．
+
+
+\subsection{システムモデル}
+本節では，本論文で用いるシステムモデルについて述べる．
+図\ref{att} のような2組の送受信局組が存在する場合の周波数利用効率を考える．AP 1はSTA 2へ，AP 3はSTA 4へ同一チャネルで片方向送信を行うとする．
+図\ref{att}において，破線で示すように，AP 1から送信される信号はAP 3とSTA 4にとって干渉となり，AP 3から送信される信号はAP 1とSTA 2にとって干渉となる．
+ここでは，STA 2とSTA 4からのACKフレームは無視している．
+
+それぞれの無線局の送信電力を$P$，無線局$i$と無線局$j$との間のチャネル利得を$G_{ji}\,(0<G_{ji}<1, G_{ji}=G_{ij})$とする．すなわち，無線局$j$における無線局$i$からの信号の受信電力を$G_{ij}P$とする．
+また無線局$i$に用いるアッテネータの減衰量を$a_i\,(a_i \geq 1)$とする．
+すなわち，アッテネータを無線局$i$及び無線局$j$に用いる場合には，無線局$j$における無線局$i$からの信号の受信電力を$G_{ij}P/a_{i}a_{j}$とする．
+送信電力，利得，アッテネータの減衰量は時間的に不変であると仮定する．
+加えて，全ての無線局にアッテネータを接続しない場合，すなわち，$a_i=1,\,\forall i$の場合には，AP 1とAP 3は互いに信号を検出可能と仮定する．
+すなわち，受信局における雑音電力を$N$，キャリア検出しきい値を$T$とした場合，$G_{31}P+N>T$が成り立つと仮定する．
+この仮定の理由は，AP 1とAP 3が互いに信号を検出しないのであれば，アッテネータを用いなくても同時に送信を行うことができるためである．
+SINRに対する周波数利用効率の評価には通信路容量を用いる．すなわち，周波数利用効率$c\mathrm{(bit/s/Hz)}$は
+\begin{align}
+c(\mathit{SINR}) := \log_2(1+\mathit{SINR})
+ \label{eq1}
+\end{align}
+と仮定して求める．
+
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.7\linewidth]{att2_RCS.eps}
+\caption{システムモデル}
+\label{att}
+\end{figure}
+\fi
+システム全体の評価をするために，各送受信局組の周波数利用効率の和を用いる．
+AP 1とAP 3が飽和トラヒックで同時に送信しようとしており，ペイロード長の等しいデータフレームを送信する場合を仮定している．
+アッテネータを接続していない場合，各送受信局組の周波数利用効率の和$\eta_0$は次式で表される．
+\begin{align}
+\displaystyle \eta_0 &\coloneqq \displaystyle \frac {\displaystyle 2 }
+{\displaystyle \frac{1}{\displaystyle c\left(\frac{G_{21} P}{N}\right)} + \frac{1}{\displaystyle c\left( \frac{G_{43} P}{N}\right)}}\label{eq2}
+\end{align}
+
+次に，アッテネータをすべての無線局に接続した場合の各送受信局組の周波数利用効率の和を求める．
+AP 1とAP 3が互いに信号を検出している場合，すなわち$G_{31} P /a_3 a_1 + N \geq T$かつ$G_{13} P/a_1 a_3  + N \geq T$の場合，各送受信局組の周波数利用効率の和は以下の式で表される．
+\begin{align}
+\eta_\mathrm{a} &\coloneqq
+\displaystyle \frac {\displaystyle 2 }
+{\displaystyle \frac{1}{\displaystyle c\left(\frac{G_{21} P}{a_2a_1N}\right)} + \frac{1}{\displaystyle c\left(\frac{G_{43} P}{a_4a_3N}\right)}}\label{etaa}
+\end{align}
+式(\ref{etaa})は，$a_i=1$のとき，すなわちアッテネータを接続していないとき，式(\ref{eq2})と等しくなる．
+AP 1とAP 3が互いに信号を検出していない場合，すなわち$G_{31} P/a_3 a_1 + N < T$かつ$G_{13} P/a_1 a_3 + N < T$の場合，各送受信局組の周波数利用効率の和は以下の式で表される．
+\begin{align}
+ \eta_\mathrm{s} &\coloneqq c\left(\frac{G_{21} P/a_2 a_1}{G_{23} P/a_2a_3 + N}\right) + c\left(\frac{G_{43} P/a_4 a_3 }{G_{41} P/a_4 a_1 + N}\right)\label{etas}
+\end{align}
+この場合，AP 1とAP 3が信号を同時に送信しているため，雑音電力に干渉電力の項が加わる．
+
+したがって，アッテネータを接続した場合の各送受信局組の周波数利用効率の和は以下のように表すことができる．
+\begin{align}\label{etaATT}
+\eta_\mathrm{ATT} \coloneqq \begin{cases}
+\eta_\mathrm{a}, & G_{31} P/a_3 a_1 + N \geq T; \\ 
+\eta_\mathrm{s}, & G_{31} P/a_3 a_1 + N < T
+\end{cases} 
+\end{align}
+
+\subsection{アッテネータを用いた反比例設定法が有効となる十分条件} \label{suff}
+本節では，アッテネータを用いた場合の周波数利用効率が，アッテネータを用いない場合の周波数利用効率より高くなる十分条件を導出する．
+%すなわち，式(\ref{eq2})，式(\ref{etaATT})より，$\eta_\mathrm{ATT}>\eta_0$となる十分条件を導出する．
+\subsubsection{通信路容量を周波数利用効率としたときの十分条件}
+簡単のため，AP 1とAP 3は伝送速度に比例したペイロードのフレームを生成すると仮定し，AP 1とAP 3が互いに信号を検出しているとき，各無線局は全体の半分の時間，送信できると仮定する．
+すなわち，式(\ref{eq2})を以下の式に置き換える．
+\begin{align}
+\eta_0 \coloneqq \frac{1}{2} c\left(\frac{G_{21} P}{N}\right)
++ \frac{1}{2} c\left(\frac{G_{43} P}{N}\right) \label{eq2dash}
+\end{align}
+また，式(\ref{etaa})を以下の式に置き換える．
+\begin{align}\label{etaadash}
+\eta_\mathrm{a} &\coloneqq
+ \frac{1}{2} c\left(\frac{G_{21} P}{a_2 a_1N}\right) + \frac{1}{2} c\left(\frac{G_{43} P}{a_4 a_3N}\right)
+ \quad\quad\quad\quad(G_{31} P /a_3 a_1 + N \geq T)
+ \end{align}
+ 式(\ref{etas})，式(\ref{etaATT})，式(\ref{eq2dash})，式(\ref{etaadash})より，$\eta_\mathrm{ATT}>\eta_0$となる十分条件を導出する．
+まず，AP 1とAP 3が互いに信号を検出する場合，すなわち，$G_{31} P/a_3 a_1 \geq T$の場合，$\eta_\mathrm{ATT}>\eta_0$となることはない．
+なぜなら$G_{31} P /a_3 a_1 \geq T$の場合，$\eta_\mathrm{ATT}$は$a_i$に関して単調減少であり，$a_i=1$のとき最大となり，そのときの$\eta_\mathrm{ATT}$の値は$\eta_0$と一致するためである．
+
+次に，AP 1とAP 3が互いに信号を検出しない場合，すなわち，$G_{31} P/a_3 a_1 < T$の場合を考える．簡単のために，このときの，$\eta_0$と$\eta_\mathrm{ATT}$を次のように近似し，それぞれ$\eta_0^\prime$，$\eta_\mathrm{ATT}^\prime$として定義する．
+\begin{align}
+\eta_0 &\simeq  \frac{1}{2} \log_2\left(\frac{G_{21} P}{N}\right)
++ \frac{1}{2} \log_2\left(\frac{G_{43} P}{N}\right) \nonumber \\
+& =  \frac{1}{2} \log_2\left(\frac{G_{21} G_{43}P^2}{N^2}\right) =: \eta_0^\prime \label{eq4} \\
+\eta_\mathrm{ATT} &\simeq  \displaystyle \log_2\left(\frac{G_{21} P/a_2 a_1}{G_{23} P/a_2 a_3}\right) + \log_2\left(\frac{G_{43} P/a_4 a_3}{G_{41} P/a_4 a_1}\right) \nonumber \\
+&  =: \eta_\mathrm{ATT}^\prime \quad (G_{31} P/a_3 a_1 + N < T) \label{eq5}
+\end{align}
+%= \log_2\left(\frac{G_{21}G_{43}}{G_{23}G_{41}}\right)
+$\eta_0^\prime$，$\eta_\mathrm{ATT}^\prime$では，$\mathit{SINR}\gg1$として対数関数内の1の項を無視している．以降で求める十分条件が成り立つとき，この近似が妥当であることを\ref{数値評価}の数値評価及び\ref{有線実験}において示す．
+また，$\eta_\mathrm{ATT}^\prime$では，雑音の項を無視している．すなわち，次式を仮定している．
+\begin{align}
+&G_{23} P/a_2 a_3 \gg N, \quad G_{41} P/a_4 a_1 \gg N. \label{eq6}
+\end{align}
+また，$a_1 = a_3$の場合，式(\ref{eq4})，式(\ref{eq5})より以下の式を得る．
+\begin{align}
+&\eta_0^\prime<\eta_\mathrm{ATT}^\prime \Leftrightarrow \frac{P}{N} < \frac{\sqrt{G_{21}G_{43}}}{G_{41}G_{23}} \label{eq7}
+\end{align}
+したがって，$a_3 a_1 G_{31} P < T$，式(\ref{eq6})，式(\ref{eq7})が無線局にアッテネータを用いると，周波数利用効率の和が増加する十分条件となる．
+%ここで注意しておきたいのは，上記の十分条件が成り立つ範囲では$\eta_\mathrm{ATT}^\prime$は$a_i$に依存せず，一定の値を取ることである．すなわち，十分条件が成り立つ範囲では，$\eta_0$に対する$\eta_\mathrm{ATT}$の比はほぼ一定となり，比が最大となる$a_i$を厳密に求めることはあまり重要ではないということである．
+また，式(\ref{eq7})から，異なる送受信局組間のチャネル利得に対して対応する送受信局間のチャネル利得が十分大きいときアッテネータを用いることが有効であり，異なる送受信局組間のチャネル利得に対して対応する送受信局間の比が大きいほど周波数利用効率の和が増加する．
+
+\subsubsection{周波数利用効率に上限がある場合の十分条件}
+簡単のため，AP 1とAP 3は伝送速度に比例したペイロードのフレームを生成すると仮定し，AP 1とAP 3が互いに信号を検出しているとき，各無線局は全体の半分の時間，送信できると仮定する．
+IEEE 802.11a/gにおいて，伝送速度の最大値は54\,Mbit/sである\cite{11}．したがって，IEEE 802.11a/gで通信を行っている場合，周波数利用効率の上限は以下の式で表される．
+\begin{align}
+\frac{54\,\mathrm{Mbit/s}}{20\,\mathrm{MHz}}=2.7\,\mathrm{bit/s/Hz}
+\end{align}
+そこで，IEEE 802.11a/gを近似した周波数利用効率のモデルを考え，周波数利用効率の計算を式(\ref{eq1})から以下の式に置き換えた場合を検討する．
+\begin{align}\label{SINRdash}
+c(\mathrm{SINR}) = \min \{2.7,0.52\log _2  (1+0.25\mathrm{SINR})\}
+\end{align}
+つまり，$a_3a_1G_{31}P + N \geq T$を満たすとき式(\ref{etaa})は次式で表される．
+\begin{align}
+\label{etaadash1}
+\nonumber \eta_\mathrm{a} &\coloneqq
+\frac{1}{2}\min\left\{2.7,0.52\log_2 \left(1+ 0.25\frac{G_{21}P}{a_2a_1N}\right)\right\} \\
+&+ \frac{1}{2}\min\left\{2.7,0.52\log_2 \left(1+ 0.25\frac{G_{43}P}{a_4a_3N}\right)\right\}
+\end{align}
+また，$G_{31}P/a_3a_1 + N < T$を満たすとき式(\ref{etas})は次式で表される．
+\begin{align}
+\label{etasdash1}
+\nonumber \eta_\mathrm{s} &\coloneqq \min\left\{2.7,0.52\log_2 \left(1+ 0.25\frac{G_{21}P/a_2a_1}{G_{23}P/a_2a_3 + N}\right)\right\}\\
+ &+ \min\left\{2.7,0.52\log_2 \left(1+ 0.25\frac{G_{43}P/a_4a_3}{G_{41}P/a_4a_1 + N}\right)\right\}
+\end{align}
+ここで，0.52，0.25という値は雑音指数を10\,dB，マージンを5\,dBと仮定した場合，IEEE 802.11a/gにおける伝送速度と受信感度の関係を満たすように設定している．
+このとき，$0.52\log_2(1 + 0.25 G_{21}P/N) > 2.7$，$0.52\log_2(1 + 0.25 G_{43}P/N) > 2.7$と仮定すると$\eta_{ATT} > \eta_0$となる十分条件は，$G_{31}P/a_3a_1+N<T$，式(\ref{eq6})及び以下の式である．
+\begin{align}
+0.52\log_2\left(0.25\frac{G_{21} P/a_2 a_1 }{G_{23} P/a_2 a_3 }\right) > \frac{2.7}{2} \nonumber \\0.52\log_2\left(0.25\frac{G_{43} P/a_4 a_3 }{G_{41} P/a_4 a_1 }\right) > \frac{2.7}{2} \label{eq100}
+\end{align}
+
+\subsection{数値評価} \label{数値評価}
+\begin{table}[t]
+\caption{パラメータ.}
+\label{para}
+\begin{center}
+\begin{tabular}{cc}
+\hline
+搬送波周波数 & 2.4\,GHz \\
+送信電力$P$ & 13\,dBm \\
+%帯域幅 & 20\,MHz \\
+キャリア検出しきい値$T$ & $-$82\,dBm \\
+雑音電力$N$ & $-$91\,dBm \\
+\hline 
+\end{tabular}
+\end{center}
+\end{table}
+本節では，アッテネータを用いた反比例設定法により，各送受信局組の周波数利用効率が増加することを数値評価によって確認する．
+数値評価では以下の4つの場合について検討する．
+\begin{itemize}
+\item AP 1，STA 2，AP 3，STA 4を制御する場合
+\item AP 1，STA 2を制御する場合
+\item AP 1，AP 3を制御する場合
+\item AP 1を制御する場合
+\end{itemize}
+AP 1，STA 2，AP 3，STA 4を制御した場合，AP 1，AP 3を制御した場合においては，通信路容量を周波数利用効率としたときの評価及び周波数利用効率に上限がある場合の評価を行う．
+AP 1，STA 2を制御した場合，AP 1を制御した場合においては，周波数利用効率に上限がある場合の評価を行う．
+
+主なパラメータを表\ref{para}に示す．伝搬路は簡単のために自由空間を仮定し，アンテナ利得は0\,dBiとする．
+すなわち，$G_{ji}=({\lambda}/{4\pi D_{ji}})^2$を仮定する．
+%\begin{align}
+%G_{ji} = \left(\frac{\lambda}{4\pi D_{ji}}\right)^2
+%\end{align}
+ここで，$\lambda$は搬送波の波長，$D_{ji}$は送信局$i$と受信局$j$との間の距離である．
+本論文ではモバイルルータが使用されているような，送信局と受信局の間の距離は短く，各送信局間の距離は比較的長い場合を考える．
+よって以下では，簡単のために$D_{21}=D_{43}=0.5\,\mathrm{m}$，$D_{31}=D_{41}=D_{23}\eqqcolon D$と仮定する．
+
+\subsubsection{AP 1，STA 2，AP 3，STA 4を制御した場合の評価}\label{全端末制御数値評価}
+本項では，すべての無線局をアッテネータにより制御する場合の周波数利用効率の和を示す．
+すなわち，$a_1=a_2=a_3=a_4$の場合の周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{ne_a1_a2_a3_a4_1.eps}
+\caption{アッテネータの減衰量に対する周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D,a_1=a_2=a_3=a_4$ )}
+\label{fig1}
+\end{figure}
+\fi
+
+図\ref{fig1}に，$a_1=a_2=a_3=a_4$としたときのアッテネータの減衰量$a_1$に対する周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+ただし，図\ref{fig1}における$\eta_{ATT}$は，式(\ref{etaa})及び式(\ref{etas})を用いている．
+また，以下AP 1，AP 3を制御した場合も同様の式を用いる．
+図\ref{fig1}において，横軸はアッテネータの減衰量であり，縦軸はAP 1，AP 3の周波数利用効率の和である．
+また，$\eta_0$はアッテネータを接続していない場合の，AP 1，AP 3の周波数利用効率の和を示している．
+図\ref{fig1}において，例えば$D=80\,\mathrm{m}$の場合，$a_i$を0\,dBから増加させていくと$a_i = 8.7\,\mathrm{dB}$でAP 1とAP 3は互いに信号を検出しなくなり，周波数利用効率の和が$\eta_0$より増加する．
+しかし，$a_i$をさらに増加させるとAP 1からSTA 2への信号電力及びAP 3からSTA 4への信号電力が低下するため，周波数利用効率の和は減少する．
+式(\ref{eq7})より，周波数利用効率の和が増加するアッテネータの減衰量が存在する条件は$D > 28.1\,\mathrm{m}$である．
+また，$D=80\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>8.7\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 13\,\mathrm{dB}$が得られる．
+したがって，$D=80\,\mathrm{m}$の場合，$8.7\,\mathrm{dB} < a_1 \ll 13\,\mathrm{dB}$で周波数利用効率の和が増加することが\ref{suff}より求められる．
+図\ref{fig1}より，$D=80\,\mathrm{m}$の場合，$8.7\,\mathrm{dB} < a_1 \ll 13\,\mathrm{dB}$で周波数利用効率の和が$\eta_0$より高いことが確認できる．
+%図\ref{fig1}より，$D=80\,\mathrm{m}$の場合，アッテネータの値によっては，周波数利用効率の和が増加する．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{ne_a1_a2_a3_a4.eps}
+\caption{アッテネータの減衰量に対する上限付きの周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D,a_1=a_2=a_3=a_4$ )}
+\label{n_e_a1_a2_a3_a4}
+\end{figure}
+\fi
+
+図\ref{n_e_a1_a2_a3_a4}にアッテネータの減衰量$a_1=a_2=a_3=a_4$に対する周波数利用効率の上限を考慮した場合の周波数利用効率の和を示す．
+ただし，図\ref{fig1}における$\eta_{ATT}$は，式(\ref{etaadash1})及び式(\ref{etasdash1})を用いている．
+また，以下AP 1，STA 2を制御した場合，AP 1，AP 3を制御した場合，AP 1を制御した場合も同様の式を用いる．
+図\ref{n_e_a1_a2_a3_a4}において，アッテネータを用いた場合，用いない場合と比べて，周波数利用効率は最大で2倍になる．
+上限を考慮しない場合と比べてAP 1とAP 3との間の距離が短くても有効であるといえる．
+また，AP 1とAP 3との間の距離が長いほど有効であるアッテネータ減衰量の値の範囲が広い．
+式(\ref{eq100})より周波数利用効率の和が増加するアッテネータの減衰量が存在する条件は$D > 4.9\,\mathrm{m}$である．
+図\ref{n_e_a1_a2_a3_a4}より$D > 4.9\,\mathrm{m}$において，周波数利用効率の和が増加するアッテネータの減衰量が存在することがわかる．
+
+\subsubsection{AP 1，STA 2を制御した場合の評価}\label{AP1STA2制御数値評価}
+本項では，AP 1及びSTA 2のみをアッテネータにより制御した場合の周波数利用効率の和を示す．
+すなわち，$a_1=a_2$，$a_3=a_4=1$の場合の周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+ただし，IEEE 802.11a/gを近似した周波数利用効率のモデルを扱う．
+
+図\ref{n_e_a1_a2}にアッテネータの減衰量$a_1=a_2$に対する周波数利用効率の上限を考慮した場合の周波数利用効率の和を示す．
+図\ref{n_e_a1_a2}より，AP 1及びSTA 2のみ制御した場合においても，周波数利用効率の和が増加するアッテネータの減衰量が存在し，周波数利用効率の和は最大で2倍となる．
+$D=80\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>17.4\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 26\,\mathrm{dB}$が得られる．
+したがって，$D=80\,\mathrm{m}$の場合，$17.4\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加することが\ref{suff}より求められる．
+図\ref{n_e_a1_a2}より，$D=80\,\mathrm{m}$の場合，$17.4\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{ne_a1_a2.eps}
+\caption{アッテネータの減衰量に対する上限付きの周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D,a_1=a_2$ )}
+\label{n_e_a1_a2}
+\end{figure}
+\fi
+
+\subsubsection{AP 1，AP 3を制御した場合の評価}
+本項では，AP 1及びAP 3のみをアッテネータにより制御した場合の周波数利用効率の和を示す．
+すなわち，$a_1=a_3$，$a_2=a_4=1$の場合の周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+図\ref{n_e_a1_a3_1}に，$a_1=a_3$としたときのアッテネータの減衰量$a_1$に対する周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+式(\ref{eq7})より，周波数利用効率の和が増加するアッテネータの減衰量が存在する条件は$D > 28.1\,\mathrm{m}$である．
+また，$D=80\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>8.7\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 26\,\mathrm{dB}$が得られる．
+したがって，$D=80\,\mathrm{m}$の場合，$8.7\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加すると求められる．
+図\ref{n_e_a1_a3_1}より，$D=80\,\mathrm{m}$の場合，$8.7\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{ne_a1_a3_1.eps}
+\caption{アッテネータの減衰量に対する周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D,a_1=a_3$ )}
+\label{n_e_a1_a3_1}
+\end{figure}
+\fi
+
+
+図\ref{n_e_a1_a3}にアッテネータの減衰量$a_1=a_3$に対する周波数利用効率の上限を考慮した場合の周波数利用効率の和を示す．
+図\ref{n_e_a1_a3}より，AP 1及びAP 3のみ制御した場合においても，周波数利用効率の和が増加するアッテネータの減衰量が存在し，周波数利用効率の和は最大で2倍となる．
+式(\ref{eq100})より周波数利用効率の和が増加するアッテネータの減衰量が存在する条件は$D > 4.9\,\mathrm{m}$である．
+図\ref{n_e_a1_a3}より$D > 4.9\,\mathrm{m}$において，周波数利用効率の和が増加するアッテネータの減衰量が存在することがわかる．
+図\ref{n_e_a1_a2_a3_a4}と比べるとすべての距離$D$において，周波数利用効率の和が増加しているアッテネータの減衰量の範囲が広い．
+これは，$a_2=a_4=1$より，AP 1からSTA 2への信号電力及びAP 3からSTA 4への信号電力が$a_1=a_2=a_3=a_4$を制御した場合の信号電力より大きいためである．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{ne_a1_a3.eps}
+\caption{アッテネータの減衰量に対する上限付きの周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D,a_1=a_3$ )}
+\label{n_e_a1_a3}
+\end{figure}
+\fi
+
+\subsubsection{AP 1のみを制御した場合の評価}
+本項では，AP 1のみをアッテネータにより制御した場合の周波数利用効率の和を示す．
+すなわち，$a_2=a_3=a_4=1$の場合の周波数利用効率の和$\eta_\mathrm{ATT}$を示す．
+ただし，IEEE 802.11a/gを近似した周波数利用効率のモデルを扱う．
+
+図\ref{n_e_a1}にアッテネータの減衰量$a_1$に対する周波数利用効率の上限を考慮した場合の周波数利用効率の和を示す．
+図\ref{n_e_a1}より，AP 1のみ制御した場合においても，周波数利用効率の和が増加するアッテネータの減衰量が存在し，周波数利用効率の和は最大で2倍となる．
+式(\ref{eq7})より，周波数利用効率の和が増加するアッテネータの減衰量が存在する条件は$D > 28.1\,\mathrm{m}$である．
+また，$D=80\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>17.4\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 26\,\mathrm{dB}$が得られる．
+したがって，$D=80\,\mathrm{m}$の場合，$17.4\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加することが\ref{suff}より求められる．
+図\ref{n_e_a1}より，$D=80\,\mathrm{m}$の場合，$17.4\,\mathrm{dB} < a_1 \ll 26\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+また図\ref{n_e_a1_a2}と比べると周波数利用効率の和が増加しているアッテネータの減衰量の範囲が広いことが確認できる．
+これは，$a_2=1$より，AP 1からSTA 2への信号電力が$a_1=a_2$を制御した場合の信号電力より大きいためである．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{ne_a1.eps}
+\caption{アッテネータの減衰量に対する上限付きの周波数利用効率の和   \newline $(D_{21}=D_{43}=0.5\,\mathrm{m},D_{31}=D_{41}=D_{23}=D$ )}
+\label{n_e_a1}
+\end{figure}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%　　　　　　　　有線実験
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{有線実験系におけるスループット評価} \label{有線実験}          %有線実験
+同軸ケーブル接続による有線実験環境では，無線実験系で実験を行う際に避けられない無線局間の電波伝搬の違い，無線局のアンテナ指向性の違い，他局干渉といった問題を回避し，再現性を高めることが可能である．
+本章では，\ref{提案方式}で議論した2組の送受信局が存在するモデルを同軸ケーブル接続による有線実験系により再現し，スループット測定を行う．
+スループット測定は\ref{数値評価}と同様，以下の4つの場合で行う．
+\begin{itemize}
+\item AP 1，STA 2，AP 3，STA 4を制御した場合
+\item AP 1，STA 2を制御した場合
+\item AP 1，AP 3を制御した場合
+\item AP 1を制御した場合
+\end{itemize}
+また，スループットの測定に先立ちRSSI（Received Signal Strength Indicator）の測定を行う．
+\subsection{機器構成}
+本節では，同軸ケーブル接続による有線実験環境の機器構成について述べる．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.6\textwidth]{testbed_throughput.eps}
+\caption{同軸ケーブル接続による実験環境におけるスループット測定の実験図}
+\label{t_mesure}
+\end{figure}
+\fi
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{testbed_wireless.eps}
+\caption{無線での実験図}
+\label{w_mesure}
+\end{figure}
+\fi
+機器構成を図\ref{t_mesure}に示す．図\ref{t_mesure}は，図\ref{w_mesure}を等価的に再現している．
+%使用器具はAP，PC（MacBook Pro Retina, 13-inch, Early 2013），AirPcap，同軸変換ケーブル（ST18/SMAm/SMAm/1000m），分配・結合器（R\&K-PD610-0S），アッテネータ，終端抵抗（TR06RS）である．
+使用器具は以下である．
+\begin{itemize}
+\item AP（Allied Telesis AT-TQ2403）
+\item PC（Apple MacBook Pro Retina, 13-inch, Early 2013）
+\item AirPcap
+\item 同軸変換ケーブル（HUBER+SUHNER ST18/SMAm/SMAm/1000m）
+\item 同軸変換ケーブル（HUBER+SUHNER ST18/SMAm/RPSMAm/1000m）
+\item 分配・結合器（R\&K-PD610-0S）
+\item 可変アッテネータ（Agilent 8494B ATTENUATOR / 11 dB）
+\item 固定アッテネータ
+\item 終端抵抗（Antenna Technology TR06RS）
+\end{itemize}
+%APはアライドテレシス株式会社のAT-TQ2403を使用している．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.5\textwidth]{bunpaiki.eps}
+\caption{分配・結合器での信号の減衰}
+\label{bunpaiki}
+\end{figure}
+\fi
+図\ref{bunpaiki}に示す分配・結合器は，入力信号が分岐する際，出力信号は入力信号と比べ$3\,\mathrm{dB} + L_\mathrm{i}$減少する．
+ここで，$L_{\mathrm{i}}$（$0\,\mathrm{dB} \leq L_{\mathrm{i}} \leq 1\,\mathrm{dB}$）は分配・結合器の挿入損失である．
+入力された信号が結合する際，出力信号は入力信号と比べ$L_\mathrm{i}$減少する．
+また図\ref{bunpaiki}において赤色の実線で示すように，入力された信号が分配・結合器を透過する際，出力信号は入力信号と比べ16\,dB減少する．
+
+AP及びSTAにはEthernetポート（100BASE-TX）があり，4つのAP，STAのEthernetポートからはストレートケーブルでそれぞれPCに接続する．
+これらのPCは，Iperfによるスループット計測のために必要なものである．
+また，AP及びSTAの1つのアンテナ端子からは同軸変換ケーブル，分配・結合器，アッテネータを用いて他のAPあるいはSTAと接続する．
+AP，STAの使用していないアンテナ端子には終端抵抗を接続する．
+
+\subsubsection{パラメータの関係}\label{aa}
+本項では，図\ref{t_mesure}と図\ref{w_mesure}におけるパラメータの関係について述べる．
+図\ref{t_mesure}において，$a_\mathrm{A}$，$a_\mathrm{B1}$，$a_\mathrm{B2}$，$a_\mathrm{B3}$，$a_\mathrm{B4}$，$a_\mathrm{C}$はアッテネータの減衰量であり，単位はdBである．
+%また，分配・結合器では入力された信号が分岐する際，出力信号は入力信号と比べ3\,dB減少する．
+図\ref{w_mesure}において，$a_i$はアンテナと無線局$i$の間に接続されているアッテネータの減衰量であり，$L_{ij}$は無線局$i$と無線局$j$の間の自由空間における距離減衰である．
+AP 1とSTA 2の間の信号の減衰量の関係は，以下の式で表される．
+\begin{equation}
+a_1 + L_{12} +a_2 = 3\,\mathrm{dB} +2L_{\mathrm{i}} + a_A 
+\label{eq12}
+\end{equation}
+式(\ref{eq12})の左辺は，AP 1からの信号がSTA 2で受信されるまでにアッテネータの減衰量$a_1$及び$a_2$，AP 1-STA 2間の距離減衰$L_{12}$の分だけ減衰することを表している．
+式(\ref{eq12})の右辺は，AP 1からの信号がSTA 2で受信されるまでに分配・結合器における信号の分岐による3\,dB，2つの分配・結合器の挿入損失による$2L_{\mathrm{i}}$，アッテネータの減衰量$a_\mathrm{A}$の分だけ減衰することを表している．
+実際にはSTA 2で受信される信号は，分配・結合器を信号が透過するため，分配・結合器における信号の分岐による3\,dB，分配・結合器における信号の透過による16\,dB，3つの分配・結合器の挿入損失による$3L_{\mathrm{i}}$，2つのアッテネータの減衰量$a_\mathrm{B1}$，$a_\mathrm{B2}$だけ減衰したAP 1からの信号も受信される．
+RSSI測定実験及びスループット測定実験においては，分配・結合器を透過する信号の影響を抑えるため，以下の式を満たすよう，$a_\mathrm{A}$，$a_\mathrm{B1}$，$a_\mathrm{B2}$，$a_\mathrm{B3}$，$a_\mathrm{B4}$，$a_\mathrm{C}$を設定する．
+\begin{align}
+3\,\mathrm{dB} +2L_{\mathrm{i}} + a_\mathrm{A} + 10\,\mathrm{dB} \geq 3\,\mathrm{dB} + 16\,\mathrm{dB} + 3L_{\mathrm{i}} + a_\mathrm{B1} + a_\mathrm{B2}\\
+3\,\mathrm{dB} +2L_{\mathrm{i}} + a_\mathrm{A} + 10\,\mathrm{dB} \geq 3\,\mathrm{dB} + 16\,\mathrm{dB} + 3L_{\mathrm{i}} + a_\mathrm{B3} + a_\mathrm{B4}
+\end{align}
+AP 3とSTA4の間の信号の減衰量の関係は，同様に以下の式で表される．
+\begin{equation}
+a_3 + L_{34} +a_4 = 3\,\mathrm{dB} +2L_{\mathrm{i}} + a_\mathrm{A}
+\label{eq34}
+\end{equation}
+AP 1 と AP 3の間の信号の減衰量は以下の式で表される．
+\begin{equation}
+a_1 + L_{13} +a_3 = 6\,\mathrm{dB} +4L_{\mathrm{i}} + a_\mathrm{B1} + a_\mathrm{B3} + a_\mathrm{C}
+\label{eq13}
+\end{equation}
+式(\ref{eq13})の左辺は，AP 1からの信号がAP 3で受信されるまでにアッテネータの減衰量$a_1$及び$a_3$，AP 1-AP 3間の距離減衰$L_{13}$の分だけ減衰することを表している．
+式(\ref{eq13})の右辺は，AP 1からの信号がAP 3で受信されるまでに分配・結合器おける信号の2回の分岐による6\,dB，4つの分配・結合器の挿入損失$4L_{\mathrm{i}}$，アッテネータの減衰量$a_\mathrm{B1}$，$a_\mathrm{B3}$及び$a_\mathrm{C}$の分だけ減衰することを表している．
+同様にAP 1とSTA 4の間の信号の減衰量及びAP 3とSTA 2の間の信号の減衰量の関係は以下の式で表される．
+\begin{align}\label{eq14}
+a_1 + L_{14} +a_4 = 6\,\mathrm{dB} +4L_{\mathrm{i}} + a_\mathrm{B1} + a_\mathrm{B4} + a_\mathrm{C}\\
+a_3 + L_{32} +a_2 = 6\,\mathrm{dB} +4L_{\mathrm{i}} + a_\mathrm{B3} + a_\mathrm{B2} + a_\mathrm{C} 
+\label{eq32}
+\end{align}
+式(\ref{eq12})から式(\ref{eq32})より，例えば無線を用いた実験環境において$a_1$，$a_2$，$a_3$，
+$a_4$を同時に1\,dB増加させる場合，同軸ケーブル接続による実験環境では$a_\mathrm{B1}$，$a_\mathrm{B2}$，$a_\mathrm{B3}$，$a_\mathrm{B4}$を固定したとき$a_\mathrm{A}$及び$a_\mathrm{C}$を同時に2\,dBずつ増加させればよい．
+また，$a_1$，$a_2$のみを同時に1\,dB増加させる場合，同軸ケーブル接続による実験環境では$a_\mathrm{B1}$，$a_\mathrm{B2}$，$a_\mathrm{B3}$，$a_\mathrm{B4}$を固定したときAP 1とSTA 2の間に接続されている$a_\mathrm{A}$を2\,dB，$a_\mathrm{C}$を同時に1\,dBずつ増加させればよい．
+\subsection{RSSIの測定}\label{RSSIの測定}
+\subsubsection{実験構成}\label{RSSI測定構成}
+本項では，同軸ケーブル接続による実験環境においてのRSSIの測定方法について述べる．
+図\ref{r_mesure}において，$a_\mathrm{A} = 36\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B2} =a_\mathrm{B3} =a_\mathrm{B4} = 26\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$と設定する．
+このとき，$a_\mathrm{A}$及び$a_\mathrm{C}$を同時に同じ減衰量だけ変化させた場合のSTA 2，AP 3，STA 4からのビーコンフレームのRSSIをPCに接続されたAirPcapを用いて測定する．
+
+無線通信はIEEE 802.11a規格においてUDPモードで同一チャネルを使用する．
+本実験では5\,GHz帯を使用し，チャネル40を用いる．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.6\textwidth]{testbed_RSSI.eps}
+\caption{同軸ケーブル接続による実験環境におけるRSSI測定の実験図}
+\label{r_mesure}
+\end{figure}
+\fi
+
+\subsubsection{RSSI測定結果}\label{RSSI}
+AP 1におけるSTA 2，AP 3，STA 4からのRSSIをそれぞれ図\ref{STA2_RSSI}，図\ref{AP3_RSSI}，図\ref{STA4_RSSI}に示す．
+\ifnum \figtab=1
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_RSSI_STA2_a1_a2_a3_a4_ver1.eps}
+\caption{AP 1におけるSTA2からのRSSI}
+\label{STA2_RSSI}
+\end{figure}
+\fi
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_RSSI_AP3_a1_a2_a3_a4_ver1.eps}
+\caption{AP 1におけるAP3からのRSSI}
+\label{AP3_RSSI}
+\end{figure}
+\fi
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_RSSI_STA4_a1_a2_a3_a4_ver1.eps}
+\caption{AP 1におけるSTA4からのRSSI}
+\label{STA4_RSSI}
+\end{figure}
+\fi
+図\ref{STA2_RSSI}，図\ref{AP3_RSSI}，図\ref{STA4_RSSI}において，横軸は無線での実験における各端末のアッテネータの減衰量であり青色の点はAP 1におけるRSSIを表している．
+また図\ref{STA2_RSSI}における緑色の実線は，STA 2からのRSSIを最小二乗法により直線近似したものである．
+今回の測定では，$a_\mathrm{A} = 36\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B2} =a_\mathrm{B3} =a_\mathrm{B4} = 26\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$と設定しており，式(\ref{eq12})より，AP 1とSTA 2との間では信号電力は39\,dB減衰するよう設定した．
+また，式(\ref{eq13})より，AP 1とAP 3との間では信号電力は58\,dB減衰するよう設定しており，式(\ref{eq14})より，AP 1とSTA 4間では信号電力は58\,dB減衰するよう設定した．
+したがって，AP 1におけるSTA 2からのRSSIと比べAP 3及びSTA 4からのRSSIは，本設定では19\,dB減少している．
+ただし，これらの設定では，分配・結合器の挿入損失やアッテネータの接続損失，ケーブル損失は考慮していない．
+図\ref{AP3_RSSI}，図\ref{STA4_RSSI}における赤色の実線は，図\ref{STA2_RSSI}における緑色の実線から19\,dB減少させたRSSIを表しており，これは分配・結合器の挿入損失や接続損失がないと仮定した場合のAP 3及びSTA 4からのRSSIである．
+図\ref{AP3_RSSI}，図\ref{STA4_RSSI}における緑色の実線はそれぞれ，AP 3からのRSSIを最小二乗法により直線近似したもの，STA 4からのRSSIを最小二乗法により直線近似したものである．
+図\ref{STA2_RSSI}，図\ref{AP3_RSSI}，図\ref{STA4_RSSI}から，アッテネータの減衰量を増加させると，増加させた減衰量だけRSSIが減少していることがわかる．
+またAP 3及びSTA 4からのRSSIは，AP 1からのRSSIと比べ設定した減衰量よりさらに10\,dB減少していることがわかる．
+想定よりRSSIが減少している理由として，分配・結合器の挿入損失やアッテネータの接続損失，ケーブル損失などの影響が挙げられる．
+
+\subsection{AP 1，STA 2，AP 3，STA 4を制御した場合のスループットの測定}\label{全端末制御}
+無線の実験においてAP 1，STA 2，AP 3，STA 4とアンテナの間に接続されているアッテネータの減衰量$a_1$，$a_2$，$a_3$，$a_4$を変化させる場合の実験を同軸ケーブル接続による有線実験環境で行う．
+\subsubsection{実験構成}\label{全端末制御実験構成}
+実験構成を図\ref{t_mesure}に示す．
+パラメータの関係は\ref{aa}と同様である．
+使用器具は，RSSI測定に使用した器具と同じである．
+4つの無線局のうち，AP 1及びAP 3は通常のAPとして使用し，STA 2及びSTA 4はSTAとして使用する．
+また，APの1つのアンテナ端子は同軸変換ケーブル，分配・結合器，アッテネータを用いて他のAP及びSTAと接続する．
+AP及びSTAの使用していないアンテナ端子には終端抵抗を接続する．
+この際，STA 2はAP 1のネットワークをWDS（Wireless Distribution System）拡張（WDSブリッジ）して接続させる．
+AP 3とSTA 4の接続も同様である．
+
+無線LANパラメータは図\ref{AP_setting}の通りである．
+この図で「無線1」とは5\,GHz帯を表しており，本実験では「無線1」を用いる．
+本実験では，RTSフレーム，CTSフレームの送信があるときのスループットを測定する．
+図\ref{AP_setting}において「RTSしきい値」を1000とするとデータフレームのペイロード長が1470\,BであるためRTS，CTSフレームの送信が行われる．
+無線通信はIEEE 802.11a規格においてUDPモードで同一チャネルを使用する．
+飽和トラヒックにするため，各APに50\,Mbit/sのトラヒックを印加する．
+また各APのデータフレームのペイロード長は1470\,Bと設定する．
+本実験では5\,GHz帯を使用し，チャネル40を用いる．
+測定は，2つの送信局が同時に送信を開始した時点から25秒間行う．
+以下\ref{AP1，STA 2制御}，\ref{AP1，AP 3制御}，\ref{AP1制御}では同様の設定で行う．
+
+図\ref{t_mesure}において，まず$a_\mathrm{A} = 36\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B2} =a_\mathrm{B3} =a_\mathrm{B4} = 26\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$と設定する．
+この設定は，\ref{RSSI測定構成}と同じ設定である．
+したがって，AP 1が受信するSTA 2からの信号電力は図\ref{STA2_RSSI}における青色の点である．
+また，AP 1が受信するAP 3からの干渉信号電力は図\ref{AP3_RSSI}における青色の点であり，AP 1が受信するSTA 4からの干渉信号電力は図\ref{STA4_RSSI}における青色の点である．
+またこの$a_\mathrm{A}$，$a_\mathrm{B1}$，$a_\mathrm{B2}$，$a_\mathrm{B3}$，$a_\mathrm{B4}$，$a_\mathrm{C}$の減衰量の設定は，図\ref{w_mesure}に示す無線実験系においてAP-STA間の距離を$0.4\,\mathrm{m}$，AP間の距離を$12\,\mathrm{m}$と設定することと等価である．
+この無線実験における無線局$i$と無線局$j$の間の距離$D_{ij}$は，以下の式により導出した．
+\begin{align}
+L_{ij} = 32.4 + 20\log_{10}\left(\frac{D_{ij}}{1\,\mathrm{m}}\right) + 20\log_{10}\left(\frac{5\,\mathrm{GHz}}{1\,\mathrm{GHz}}\right)
+\label{kyori}
+\end{align}
+ただし，AP 1とSTA 2の間の信号電力の減衰量及びAP 3とSTA 4の間の信号電力の減衰量がともに$39\,\mathrm{dB}$，AP 1とAP 3の間の信号電力の減衰量が$68\,\mathrm{dB}$であり，これらの信号電力の減衰が距離減衰$L_{ij}$によるものであると仮定した．
+
+$a_\mathrm{A}$，$a_\mathrm{C}$を2\,dBずつ増加させたときのスループットを測定する．これは，図\ref{w_mesure}に示す無線実験系において，各無線局とアンテナの間に接続されたアッテネータの減衰量$a_1$，$a_2$，$a_3$，$a_4$を同時に1\,dBずつ増加させることと等価である．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=1.2\textwidth]{AP_setting.eps}
+\caption{APの設定}
+\label{AP_setting}
+\end{figure}
+\fi
+
+\subsubsection{実験結果}
+AP 1，AP 3のスループットの和を図\ref{throughput_RTS_sum}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_a2_a3_a4_RTS_sum.eps}
+\caption{AP 1，STA 2，AP 3，STA 4を制御した場合のアッテネータの減衰量とシステムスループットの関係}
+\label{throughput_RTS_sum}
+\end{figure}
+\fi
+図\ref{throughput_RTS_sum}において，横軸は無線の実験構成におけるAP 1，STA 2，AP 3，STA 4に接続されているアッテネータの減衰量であり，縦軸はAP 1，AP 3のスループットの和である．
+図\ref{throughput_RTS_sum}よりすべての無線局にアッテネータを接続しないとき，すなわち$a_1=a_2=a_3=a_4=0\,\mathrm{dB}$のときと比べ，アッテネータをすべての無線局に接続した場合，すなわち$a_1 = a_2 = a_3 = a_4 > 0\,\mathrm{dB}$のときはスループットの和が大きく増加しているアッテネータの減衰量の範囲がある．
+$D=12\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>16.7\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 21.2\,\mathrm{dB}$が得られる．
+したがって，$D=12\,\mathrm{m}$の場合，$16.7\,\mathrm{dB} < a_1 \ll 21.2\,\mathrm{dB}$で周波数利用効率の和が増加することが\ref{suff}より求められる．
+図\ref{throughput_RTS_sum}より，$D=12\,\mathrm{m}$の場合，$16.7\,\mathrm{dB} < a_1 \ll 21.2\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+$a_1=a_2=a_3=a_4=0\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は$26.95\,\mathrm{Mbit/s}$である．
+また，$a_1=a_2=a_3=a_4=18\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は最大であり，$46.6\,\mathrm{Mbit/s}$である．
+したがって，$a_1 = a_2 = a_3 = a_4 = 18\,\mathrm{dB}$におけるAP 1とAP 3のスループットの和は，アッテネータを接続していないとき，すなわち$a_1 = a_2 = a_3 = a_4 = 0\,\mathrm{dB}$におけるスループットの和より最大で72.9\%増加する．
+$a_1 = a_2 = a_3 = a_4 > 21\,\mathrm{dB}$では，スループットの和が減少している．
+この理由を以下に示す．
+$a_1 = a_2 = a_3 = a_4 = 21\,\mathrm{dB}$では，図\ref{STA2_RSSI}よりAP 1からSTA 2への信号電力及びAP 3からSTA 4への信号電力が共に受信局において$-66\,\mathrm{dBm}$となる．
+\ref{最小受信感度}より，54\,Mbit/sでデータを伝送するには$-65\,\mathrm{dBm}$の受信電力が必要であり，受信局で受信される信号電力が$-66\,\mathrm{dBm}$では48\,Mbit/sの伝送レートになるため，スループットが減少する．
+$a_1$，$a_2$，$a_3$，$a_4$をさらに増加させると，AP 1からSTA 2への信号電力及びAP 3からSTA 4への信号電力が減少し，伝送レートが低下するためスループットが低下する．
+$a_1 = a_2 = a_3 = a_4 > 31\,\mathrm{dB}$では，AP 1からSTA 2への信号電力及びAP 3からSTA 4への信号電力が共に$-82\,\mathrm{dBm}$より低くなるため，スループットが$0\,\mathrm{Mbit/s}$となる．
+
+\ref{全端末制御数値評価}で，AP 1，STA 2，AP 3，STA 4を制御した場合，スループットが最大で100\%増加しているのに対し，図\ref{throughput_RTS_sum}では，スループットが最大で72.9\%しか増加していない．
+この理由として，実験において$a_1 = a_2 = a_3 = a_4 \leq 13\,\mathrm{dB}$におけるスループットがキャプチャ効果により増加していたことが考えられる．
+\ref{全端末制御実験構成}より，$a_1$，$a_2$，$a_3$，$a_4$の値に関わらず，STA 2及びSTA 4におけるSIRは$29\,\mathrm{dB}$である．
+\ref{キャプチャ効果}で述べたように，SIRが24\,dB以上のとき所望信号のデータフレームと干渉信号のデータフレームが衝突した場合でも，所望信号のデータフレームの90\%がキャプチャ効果により受信可能であり，スループットが10\%程度増加する．
+本実験では，キャプチャ効果により$a_1 = a_2 = a_3 = a_4 \leq 13\,\mathrm{dB}$でのスループットが10\%程度増加していたため，アッテネータにより制御した場合に最大で72.9\%しかスループットが増加しなかったと考えられる．
+
+AP 1，AP 3それぞれのスループットを図\ref{throughput_RTS}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_a2_a3_a4_RTS.eps}
+\caption{AP 1，STA 2，AP 3，STA 4を制御した場合のアッテネータの減衰量とスループットの関係}
+\label{throughput_RTS}
+\end{figure}
+\fi
+図\ref{throughput_RTS}において，横軸は無線の実験構成におけるAP 1，STA 2，AP 3，STA 4に接続されているアッテネータの減衰量である．
+図\ref{throughput_RTS}において，青色と緑色の線はそれぞれ，AP 1及びAP 3が共にデータフレームを送信している際のAP 1のスループット，AP 3のスループットを表している．
+また，橙色と赤色の線はそれぞれ，AP 1あるいはAP 3のみがデータを送信している際のAP 1のスループット，AP 3のスループットを表している．
+図\ref{throughput_RTS}より，$a_1 = a_2 = a_3 = a_4 = 14\,\mathrm{dB}$においてAP 1とAP 3のスループットに差があるが，それ以外のアッテネータの減衰量においてはAP 1とAP 3のスループットにあまり差がなく，不公平性の問題は発生していないことが確認できる．
+%図\ref{AP3_RSSI}より，アッテネータの減衰量が15\,dB付近でAPが他のAPから受信する干渉波電力が$-82\,\mathrm{dBm}$となる．
+
+\subsection{AP 1，STA 2を制御した場合のスループットの測定}\label{AP1，STA 2制御}
+無線の実験において片側の送受信端末AP 1，STA 2とアンテナの間に接続されているアッテネータの減衰量$a_1$，$a_2$を変化させる場合の実験を同軸ケーブル接続による有線実験環境で行う．
+\subsubsection{実験構成}\label{AP1STA2制御実験構成}
+図\ref{t_mesure}において，まず$a_\mathrm{A} = 36\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B2} =a_\mathrm{B3} =a_\mathrm{B4} = 36\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$と設定する．
+これは，無線の実験においてAP-STA間の距離を$0.4\,\mathrm{m}$，AP間の距離を$120\,\mathrm{m}$と設定することと等価である．
+
+AP 1とSTA 2の間に接続されている$a_\mathrm{A}$を2\,dB，$a_\mathrm{C}$を同時に1\,dBずつ増加させたときのスループットを測定する．これは，無線の実験において，AP 1及びSTA 2とアンテナの間に接続されたアッテネータの減衰量$a_1$，$a_2$を同時に1\,dBずつ増加させることと等価である．
+
+\subsubsection{実験結果}
+AP 1，AP 3のスループットの和を図\ref{throughput_a1_a2_RTS_sum}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_a2_RTS_sum.eps}
+\caption{AP 1，STA 2を制御した場合のアッテネータの減衰量とシステムスループットの関係}
+\label{throughput_a1_a2_RTS_sum}
+\end{figure}
+\fi
+図\ref{throughput_a1_a2_RTS_sum}において，横軸は無線の実験構成におけるAP 1，STA 2，AP 3，STA 4に接続されているアッテネータの減衰量であり，縦軸はAP 1，AP 3のスループットの和である．
+図\ref{throughput_a1_a2_RTS_sum}において，$a_1 = a_2 = 0\,\mathrm{dB}$のときと比べ，アッテネータをAP 1，STA 2に接続した場合，すなわち$a_1 = a_2 > 0\,\mathrm{dB}$の場合ではスループットの和が大きく増加しているアッテネータの減衰量の範囲がある．
+$D=120\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>13.4\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 22.4\,\mathrm{dB}$が得られる．
+したがって，$D=120\,\mathrm{m}$の場合，$13.4\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加すると求められる．
+図\ref{throughput_a1_a2_RTS_sum}より，$D=120\,\mathrm{m}$の場合，$13.4\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+$a_1=a_2=0\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は$26.85\,\mathrm{Mbit/s}$である．
+また，$a_1=a_2=18\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は最大であり，$46.55\,\mathrm{Mbit/s}$である．
+したがって，$a_1 = a_2 = 18\,\mathrm{dB}$におけるAP 1とAP 3のスループットの和はアッテネータを接続していないとき，すなわち$a_1 = a_2 = 0\,\mathrm{dB}$の場合におけるスループットの和より最大で73.4\%増加する．
+
+\ref{AP1STA2制御数値評価}で，AP 1，STA 2を制御した場合，スループットが最大で100\%増加しているのに対し，図\ref{throughput_a1_a2_RTS_sum}では，スループットが最大で73.4\%しか増加していない．
+この理由として，\ref{全端末制御}と同様に，実験において$a_1 = a_2  \leq 7\,\mathrm{dB}$におけるスループットがキャプチャ効果により増加していたことが考えられる．
+\ref{AP1STA2制御実験構成}より，$a_1$，$a_2$の値に関わらず，STA 2及びSTA 4におけるSIRが$39\,\mathrm{dB}$である．
+SIRが24\,dB以上のとき所望信号のデータフレームと干渉信号のデータフレームが衝突した場合でも，所望信号のデータフレームの90\%がキャプチャ効果により受信可能であり，スループットが約10\%増加するため，キャプチャ効果により73.4\%しか増加しなかったと考えられる．
+
+AP 1及びAP 3のスループットを図\ref{throughput_a1_a2_RTS}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_a2_RTS.eps}
+\caption{AP 1，STA 2を制御した場合のアッテネータの減衰量とスループットの関係}
+\label{throughput_a1_a2_RTS}
+\end{figure}
+\fi
+図\ref{throughput_a1_a2_RTS}において，横軸は無線の実験構成におけるAP 1，STA 2に接続されているアッテネータの減衰量である．
+図\ref{throughput_a1_a2_RTS}において，青色と緑色の線はそれぞれ，AP 1及びAP 3が共にデータフレームを送信している際のAP 1のスループット，AP 3のスループットを表している．
+また，橙色と赤色の線はそれぞれ，AP 1あるいはAP 3が単独でデータを送信している際のAP 1のスループット，AP 3のスループットを表している．
+図\ref{throughput_a1_a2_RTS}で，$a_1$，$a_2$を増加させるとSTA 2におけるSINRが低下するため，$a_1 > 20\,\mathrm{dB}$でAP 1のスループットが低下する．
+一方で，$a_1$，$a_2$を増加させてもSTA 4におけるSINRは低下しないため，AP 3のスループットは$a_1 > 20\,\mathrm{dB}$においても減少しない．
+図\ref{throughput_a1_a2_RTS}において，$6\,\mathrm{dB} \leq a_1 = a_2 \leq 8\,\mathrm{dB}$ではAP 3のスループットが減少しているが，$9\,\mathrm{dB} \leq a_1 = a_2 \leq 25\,\mathrm{dB}$では，AP 1とAP 3のスループットが共に増加しており，スループットの不公平性はほとんど発生していない．
+
+\subsection{AP 1，AP 3を制御した場合のスループットの測定}\label{AP1，AP 3制御}
+無線の実験においてAP 1，AP 3とアンテナの間に接続されているアッテネータの減衰量$a_1$，$a_3$を変化させる場合の実験を同軸ケーブル接続による有線実験環境で行う．
+\subsubsection{実験構成}\label{AP1AP3実験構成}
+図\ref{t_AP_mesure}において，まず$a_\mathrm{A} = 46\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B3} = 36\,\mathrm{dB}$，$a_\mathrm{B2} =a_\mathrm{B4} = 46\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$，$a_\mathrm{AP1} = a_\mathrm{AP3} = 0\,\mathrm{dB}$と設定する．
+これは，無線の実験においてAP-STA間の距離を$1.3\,\mathrm{m}$，AP間の距離を$120\,\mathrm{m}$と設定することと等価である．
+ただし，STA 2とSTA 4はお互いの信号を検出しないよう設定している．
+
+AP 1とAP 3の間に接続されている$a_\mathrm{AP1}$を1\,dB，$a_\mathrm{AP3}$を同時に1\,dBずつ増加させたときのスループットを測定する．これは，無線の実験において，AP 1及びAP 3とアンテナの間に接続されたアッテネータの減衰量$a_1$，$a_3$を同時に1\,dBずつ増加させることと等価である．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.5\textwidth]{testbed_throughput_AP.eps}
+\caption{同軸ケーブル接続による実験環境においてのスループット測定の実験図}
+\label{t_AP_mesure}
+\end{figure}
+\fi
+
+\subsubsection{実験結果}
+AP 1，AP 3のスループットの和を図\ref{throughput_a1_a3_RTS_sum}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_a3_RTS_sum.eps}
+\caption{AP 1，AP 3を制御した場合のアッテネータの減衰量とシステムスループットの関係}
+\label{throughput_a1_a3_RTS_sum}
+\end{figure}
+\fi
+図\ref{throughput_a1_a3_RTS_sum}において，横軸は無線の実験構成におけるAP 1，STA 2，AP 3，STA 4に接続されているアッテネータの減衰量であり，縦軸はAP 1，AP 3のスループットの和である．
+図\ref{throughput_a1_a3_RTS_sum}において，$a_1 = a_3 = 0\,\mathrm{dB}$の場合と比べ，アッテネータをAP 1，AP 3に接続した場合，すなわち$a_1 = a_3 > 0\,\mathrm{dB}$の場合ではスループットの和が大きく増加しているアッテネータの減衰量の範囲がある．
+$D=120\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>6.8\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 22.4\,\mathrm{dB}$が得られる．
+したがって，$D=120\,\mathrm{m}$の場合，$6.8\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加すると求められる．
+図\ref{throughput_a1_a3_RTS_sum}より，$D=120\,\mathrm{m}$の場合，$6.8\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+$a_1=a_3=0\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は$24.7\,\mathrm{Mbit/s}$である．
+また，$a_1=a_3=20\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は最大であり，$46.7\,\mathrm{Mbit/s}$である．
+したがって，$a_1=a_3=20\,\mathrm{dB}$におけるAP 1とAP 3のスループットの和はアッテネータを接続していないとき，すなわち$a_1=a_3=0\,\mathrm{dB}$の場合におけるスループットの和より最大で89.1\%増加する．
+$a_1=a_3=0\,\mathrm{dB}$の場合，STA 2及びSTA 4におけるSIRは$39\,\mathrm{dB}$であるため，キャプチャ効果によりスループットの和が89.1\%しか増加しないと考えられる．
+
+AP 1及びAP 3のスループットを図\ref{throughput_a1_a3_RTS}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.7\textwidth]{jikken_wired_AP1_AP2_a1_a3_RTS.eps}
+\caption{AP 1，AP 3を制御した場合のアッテネータの減衰量とスループットの関係}
+\label{throughput_a1_a3_RTS}
+\end{figure}
+\fi
+図\ref{throughput_a1_a3_RTS}において，横軸は無線の実験構成におけるAP 1，AP 3に接続されているアッテネータの減衰量である．
+図\ref{throughput_a1_a3_RTS}において，青色と緑色の線はそれぞれ，AP 1及びAP 3が共にデータフレームを送信している際のAP 1のスループット，AP 3のスループットを表している．
+また，橙色と赤色の線はそれぞれ，AP 1あるいはAP 3のみがデータを送信している際のAP 1のスループット，AP 3のスループットを表している．
+図\ref{throughput_a1_a3_RTS}ではスループットの不公平性は発生していないことが確認できる．
+
+\subsection{AP 1を制御した場合のスループットの測定}\label{AP1制御}
+無線の実験においてAP 1とアンテナの間に接続されているアッテネータの減衰量$a_1$を変化させる場合の実験を同軸ケーブル接続による有線実験環境で行う．
+\subsubsection{実験構成}
+図\ref{t_AP_mesure}において，まず$a_\mathrm{A} = 46\,\mathrm{dB}$，$a_\mathrm{B1} = a_\mathrm{B3} = 36\,\mathrm{dB}$，$a_\mathrm{B2} =a_\mathrm{B4} = 46\,\mathrm{dB}$，$a_\mathrm{C} = 0\,\mathrm{dB}$，$a_\mathrm{AP1} = 0\,\mathrm{dB}$と設定する．
+これは，無線の実験においてAP-STA間の距離を$1.3\,\mathrm{m}$，AP間の距離を$120\,\mathrm{m}$と設定することと等価である．
+ただし，STA 2とSTA 4はお互いの信号を検出しないよう設定している．
+
+AP 1の間に接続されている$a_\mathrm{AP1}$を1\,dBずつ増加させたときのスループットを測定する．これは，無線の実験において，AP 1とアンテナの間に接続されたアッテネータの減衰量$a_1$を1\,dBずつ増加させることと等価である．
+
+\subsubsection{測定結果}
+AP 1，AP 3のスループットの和を図\ref{throughput_a1_RTS_sum}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_RTS_sum.eps}
+\caption{AP 1のみを制御した場合のアッテネータの減衰量とシステムスループットの関係}
+\label{throughput_a1_RTS_sum}
+\end{figure}
+\fi
+図\ref{throughput_a1_RTS_sum}において，横軸は無線の実験構成におけるAP 1に接続されているアッテネータの減衰量であり，縦軸はAP 1，AP 3のスループットの和である．
+図\ref{throughput_a1_RTS_sum}において，$a_1=0\,\mathrm{dB}$の場合と比べ，アッテネータをAP 1に接続した場合，すなわち$a_1>0\,\mathrm{dB}$の場合ではスループットの和が大きく増加しているアッテネータの減衰量の範囲がある．
+$D=120\,\mathrm{m}$の場合，$G_{31}P/a_3a_1<T$より$a_1>13.4\,\mathrm{dB}$が得られ，式(\ref{eq6})より$a_1 \ll 22.4\,\mathrm{dB}$が得られる．
+したがって，$D=120\,\mathrm{m}$の場合，$13.4\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加すると求められる．
+図\ref{throughput_a1_RTS_sum}より，$D=120\,\mathrm{m}$の場合，$13.4\,\mathrm{dB} < a_1 \ll 22.4\,\mathrm{dB}$で周波数利用効率の和が増加することがわかる．
+$a_1=0\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は$24.65\,\mathrm{Mbit/s}$である．
+また，$a_1=20\,\mathrm{dB}$のとき，AP 1，AP 3のスループットの和は最大であり，$43.35\,\mathrm{Mbit/s}$である．
+したがって，$a_1=20\,\mathrm{dB}$におけるAP 1とAP 3のスループットの和はアッテネータを接続していないとき，すなわち$a_1=0\,\mathrm{dB}$におけるスループットの和より最大で75.9\%増加する．
+$a_1=0\,\mathrm{dB}$の場合，STA 2及びSTA 4におけるSIRは$39\,\mathrm{dB}$であるため，キャプチャ効果によりスループットの和が75.9\%しか増加しないと考えられる．
+
+AP 1及びAP 3のスループットを図\ref{throughput_a1_RTS}に示す．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\textwidth]{jikken_wired_AP1_AP2_a1_RTS.eps}
+\caption{AP 1のみを制御した場合のアッテネータの減衰量とスループットの関係}
+\label{throughput_a1_RTS}
+\end{figure}
+\fi
+図\ref{throughput_a1_RTS}において，横軸は無線の実験構成におけるAP 1に接続されているアッテネータの減衰量である．
+図\ref{throughput_a1_RTS}において，青色と緑色の線はそれぞれ，AP 1及びAP 3が共にデータフレームを送信している際のAP 1のスループット，AP 3のスループットを表している．
+また，橙色と赤色の線はそれぞれ，AP 1あるいはAP 3のみがデータを送信している際のAP 1のスループット，AP 3のスループットを表している．
+図\ref{throughput_a1_RTS}で，$a_1$を増加させるとSTA 2におけるSINRが低下するため，$a_1 > 22\,\mathrm{dB}$でAP 1のスループットが低下する．
+一方で，$a_1$を増加させてもSTA 4におけるSINRは低下しないため，AP 3のスループットは$a_1 > 22\,\mathrm{dB}$においても減少しない．
+
+図\ref{throughput_a1_RTS}において，$a_1>8\,\mathrm{dB}$ではAP 1とAP 3が互いに信号を検出しない．
+しかし，AP 1及びAP 3が共にデータフレームを送信している際のAP 1のスループット及びAP 3のスループットが，AP 1あるいはAP 3のみがデータを送信している際のAP 1のスループット及びAP 3のスループットより低くなっている．
+これは，$a_1$を増加させてもAP 3とSTA 2が互いに信号を検出していることが原因であると考えられる．
+今回の実験では，AP 3からのRTSフレームがSTA 2で検出され，STA 2からのCTSフレーム及びACKフレームがAP 3で検知されるためスループットがAP 1，AP 3の単独通信時のスループットと比べ低くなっていると考えられる．
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%　　　　　　　　無線実験
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{無線実験系におけるスループット評価} \label{無線実験}
+本章では，2組の送受信局が存在するモデルを無線実験系で構築し，提案方式を用いた場合のスループット測定を行う．
+\subsection{実験構成}
+使用機器及びその配置を図\ref{testbed}に示す．
+使用機器は以下である．
+\begin{itemize}
+\item AP（Allied Telesis AT-TQ2403）
+\item PC（Apple MacBook Pro Retina, 13-inch, Early 2013）
+\item 固定アッテネータ
+\end{itemize}
+各無線局にはEthernetポート（100BASE-TX）がある．
+PCはスループット測定のために用い，内蔵無線LANはオフとし，Ethernetポート（1000BASE-T）を無線局と図\ref{testbed}のようにそれぞれ接続する．
+これらのPCは，Iperfによるスループット計測のために必要である．
+
+4つの無線局のうち，AP 1とAP 3は送信局として，%送信局1と送信局3のEthernetポートからはストレートケーブルでそれぞれPCに接続する．
+STA 2とSTA 4は受信局としてそれぞれ使用し，AP 1からSTA 2，AP 3からSTA 4への送信を想定する．
+%PCの内蔵無線LANを用いない．その理由は，アンテナを取り外し，アッテネータを接続するためである．
+この際，STA 2はAP 1のネットワークをWDSブリッジして接続させる．
+AP 3とSTA 4の接続も同様である．
+これらの通信にはIEEE 802.11gを用い，チャネル6を共通に設定する．
+
+すべてのAP及びSTAのアンテナ高は0.75\,m，
+AP 1とSTA 2，ならびにAP 3とSTA 4とのアンテナ間距離は等しく0.5\,mとする．
+2つの送受信局組のアンテナ間距離は$D \in \{4\,\mathrm{m}, 8\,\mathrm{m}, 16\,\mathrm{m}\}$とする．
+なお，すべての無線局間には見通しがある．
+
+すべての無線局の送受信アンテナに，同じ減衰量のアッテネータを接続する．
+アッテネータの減衰量は$3\,\mathrm{dB}$から$33\,\mathrm{dB}$までとする．
+
+本実験は電波暗室で行う．
+したがって，本実験で使用する無線局以外から放射される電波は存在しない．
+各送受信局間のスループットをIperfを用いて測定する．
+AP 1からSTA 2方向と，AP 3からSTA 4方向に，UDPトラヒックを印加する．
+飽和トラヒックにするため，各送信局の印加トラヒックは40\,Mbit/sとする．
+ただし，RTSフレーム，CTSフレームの送信は行われないよう設定する．
+測定は，2つのAPが同時に送信を開始した時点から30秒間行う．
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{testbed_1.eps}
+\caption{実験構成}
+\label{testbed}
+\end{figure}
+\fi
+
+\subsection{結果}
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{YRP_jikken_kekka_ver1.eps}
+\caption{アッテネータの減衰量に対するスループットの和   \newline $(a_1=a_2=a_3=a_4$ )}
+\label{YRP_jikken_kekka}
+\end{figure}
+\fi
+\ifnum \figtab=1
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.8\linewidth]{YRPjikken_ver1.eps}
+\caption{アッテネータの減衰量に対するスループット   \newline $(a_1=a_2=a_3=a_4$ )}
+\label{YRPjikken}
+\end{figure}
+\fi
+図\ref{YRP_jikken_kekka}に実験結果を示す．ただし，アッテネータの値が$33\,\mathrm{dB}$のとき全ての$D$においてスループットの和を0\,Mbit/sと表示しているのは，各無線局のスループットをIperfで測定できなかったことを意味する．
+
+図\ref{YRP_jikken_kekka}から，すべての無線局にアッテネータを接続しないとき，すなわち$a_i = 0\,\mathrm{dB}, \forall i$と比べ，アッテネータをすべての無線局に接続した場合，すなわち$a_1 = a_2 = a_3 = a_4 > 0\,\mathrm{dB}$ではスループットの和が大きく増加しているアッテネータの減衰量の範囲がある．特に，$D$ = 16\,mにおいて，アッテネータを接続しないときと比べ，スループットの和が最大で1.6倍になっている．
+スループットの和は\ref{数値評価}より，最大で2倍となると考えられるが，アッテネータにより制御していない場合，すなわち$a_1 = a_2 = a_3 = a_4 = 0\,\mathrm{dB}$の場合のスループットの和がキャプチャ効果により増加していたためであると考えられる．
+
+$a_i$の値を大きくしていくと，数値評価結果の図\ref{n_e_a1_a2_a3_a4}ではスループットが急峻に2倍になる一方，実験結果では徐々に増加している．
+この理由としては，例えば距離$D$が16\,m，アッテネータの減衰量が$20\,\mathrm{dB}$付近では，無線局1と無線局3はしばしば互いに信号を検出していることが考えられる．%この場合，スループットの和は図\ref{fig2}と比べると徐々に増加している．
+一方，スループットが増加するアッテネータの減衰量の範囲は，数値評価と実験でほぼ同じである．したがって，数値評価の際に用いた仮定は妥当であったと考えられる．
+距離$D$が4\,mの際，全てのアッテネータの減衰量が$20\,\mathrm{dB}$から$26\,\mathrm{dB}$にかけてスループットが減少するのは，アッテネータの接続により所望信号電力が減少していくにも関わらず，2つの送信局が互いに信号を検出し続けるためである．
+
+%する範囲であり，アッテネータを接続していないときと比べてSINRが減少するためであると考えられる．
+
+図\ref{YRPjikken}に距離$D$が16\,mにおける無線局1と無線局3のそれぞれのスループットを示す．
+図\ref{YRPjikken}より，不公平性の問題は，アッテネータの減衰量が$16\,\mathrm{dB}$以外において発生していないことが確認される．
+一方，アッテネータの減衰量が$16\,\mathrm{dB}$においては，各無線局のスループットに大きな差が生じている．
+この際，無線局3の方が無線局1と比較して実際に送信されたフレーム数が大きくなっていた．
+これは，無線局1は無線局3の信号を検出する一方で，無線局3は無線局1の信号を検出しなかったものと考えられる．
+この原因としては，無線局1と無線局3の送信電力あるいはキャリア検出しきい値が異なることが考えられる．
+このような送信電力あるいはキャリア検出しきい値が無線局毎に異なることにより生じる不公平性の問題を解決するためには，例えばアッテネータの減衰量を設定する際に何らかのマージンを含めることが挙げられる．
+
+
+\section{結論} \label{結論}
+本論文では，送信電力及びキャリア検出しきい値の同時制御の手法としてアッテネータを端末とアンテナの間に接続することを提案し，提案方式によりシステムスループットが増加することを数値評価及び実験で示した．
+
+\ref{提案方式}では，2組の送受信局が存在するモデルにおいて，アッテネータを用いた送信電力・キャリア検出しきい値反比例設定法を適用した場合の周波数利用効率を定式化を行い，反比例設定法を適用した場合，周波数利用効率が増加する条件を導出した．
+AP 1，STA 2，AP 3，STA 4をアッテネータにより制御した場合，通信路容量を周波数利用効率としたとき，周波数利用効率が増加することを数値評価により示し，周波数利用効率が増加する条件と一致したことを確認した．
+また，IEEE 802.11a/gを近似した周波数利用効率のモデルを考え，周波数利用効率に上限を設けた数値評価では，周波数利用効率が最大で2倍となることを示した．
+さらに特定の端末のみを制御した場合，具体的にはAP 1とSTA 2を制御した場合，AP 1とAP 3を制御した場合，AP 1のみを制御した場合においても，周波数利用効率が増加するアッテネータの減衰量の範囲があることを示し，いずれの場合においても周波数利用効率が最大で2倍となることを数値評価により示した．
+
+\ref{有線実験}では，\ref{提案方式}で議論した2組の送受信局が存在するモデルを同軸ケーブル接続による有線実験系により再現し，商用の無線LAN端末を用いた実験でシステムスループットが増加することを示した．
+制御する無線局の選び方によってスループット増加率や，スループットが増加するアッテネータの減衰量の範囲が異なることを確認した．
+AP 1，STA 2，AP 3，STA 4をアッテネータにより制御した場合，システムスループットが最大で72.9\,\%増加することを確認した．
+また，スループットが増加する距離及びアッテネータの減衰量の範囲が\ref{提案方式}で導出した周波数利用効率が増加する条件と一致していることを確認した．
+AP 1，STA 2をアッテネータにより制御した場合，システムスループットが最大で73.4\,\%増加し，スループットが増加するアッテネータの減衰量の範囲が周波数利用効率が増加する条件と一致していることを確認した．
+AP 1，AP 3をアッテネータにより制御した場合，システムスループットが最大で89.1\,\%増加した．
+AP 1，AP 3を制御した場合においても，スループットが増加する距離及びアッテネータの減衰量の範囲が\ref{提案方式}で導出した周波数利用効率が増加する条件と一致していることを確認した．
+AP 1をアッテネータにより制御した場合，システムスループットが最大で75.9\,\%増加し，スループットが増加するアッテネータの減衰量の範囲が周波数利用効率が増加する条件と一致していることを確認した．
+また，いずれの場合においてもスループットの不公平性の問題もほとんど生じないことを確認した．
+
+\ref{無線実験}では，\ref{提案方式}で議論した2組の送受信局が存在するモデルを無線実験系により構築し，提案方式によるスループット増加効果を確かめた．
+AP 1，STA 2，AP 3，STA 4をアッテネータにより制御することで，スループットが増加する範囲があることを確認しスループットが最大で1.6倍程度になることを確認した．
+また，スループットの不公平性の問題がほとんど起こっていないことを確認した．
+さらに，\ref{有線実験}，\ref{無線実験}より無線局の送信電力あるいはキャリア検出しきい値の違いにより，新たに不公平性が発生することを明らかにした．
+
+
+
+\acknowledgments				% 謝辞
+守倉正博教授には本研究の機会を与えていただき，熱心な御指導，貴重な御助言を頂きましたことを深く感謝致します．
+
+山本高至准教授には本研究を進めるにあたり，直接御指導していただき，数々の御助言を下さったことを心より感謝致します．
+
+西尾理志助教には本研究を進めるにあたり，熱心な御指導，多大な御協力をして下さったことを深く感謝致します．
+
+NTTアクセスサービスシステム研究所の皆様には本研究の機会を与えていただき，貴重な御助言，多大な御協力をして下さったことを心より感謝致します．
+
+守倉研究室の皆様には本研究にあたって，あらゆる場面で御意見，御協力をいただいたことを心より感謝致します．
+
+\nocite{*}
+\bibliographystyle{sieicej}			% 文献スタイルの指定
+\bibliography{main.bib}				% 参考文献の出力
+\end{document}
