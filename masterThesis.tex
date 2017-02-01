@@ -96,45 +96,50 @@
 \def\floatpagefraction{0.7}%  図表だけのページは少なくとも
                           %  これだけを図表が占める
 
-\jtitle[全二重通信無線LANにおけるメディアアクセス制御]%	% 和文題目（内容梗概／目次用）
-	{全二重通信無線LANにおけるメディアアクセス制御}	% 和文題目
+\jtitle[全二重通信無線LANにおける\\メディアアクセス制御]%	% 和文題目（内容梗概／目次用）
+	{全二重通信無線LANにおける\\メディアアクセス制御}	% 和文題目
 \etitle{\normalsize Media Access Control for In-Band Full-Duplex wireless LANs}	% 英文題目
 \jauthor{飯田 直人}				% 和文著者名
 \eauthor{Naoto IIDA}			% 英文著者名
 \supervisor{守倉 正博 教授}			% 指導教員名
-\date{平成28年2月8日}				% 提出年月日
+\date{平成29年2月8日}				% 提出年月日
 \department{通信情報システム}				% 修士論文の場合の専攻名
 
 \begin{document}
 \maketitle					% 「とびら」の出力
 
 \begin{jabstract}				% 和文梗概
-	無線LAN（Local Area Network）システム大容量化を実現する方法の一つとして，送受信を同時に同一帯域で行うの全二重通信が有望である．
+	無線LAN（Local Area Network）システム大容量化を実現する方法の一つとして，送受信を同時に同一帯域で行う全二重通信が有望である．
 	全二重通信無線LANにおいては，同時に送信される二つのデータフレームの時間長が異なる場合にチャネルが空いた無駄時間が生じ，
-	スループットが低下するという問題がある．
-	更に，下り通信を受信するSTAとAPへ上り通信を行うSTAが異なるUFD（user-multiplexing Unidirectional Full-Duplex）通信においては，
-	APへ上り通信を行うSTAの送信信号がAPからの下り通信に干渉を与えるユーザ間干渉によってスループットが低下するという問題がある．
-	それに対し，ユーザ間干渉が少なくなるようなSTA組を選択しスループットを最大化する手法の提案がなされているが，
+	スループットが低下するという課題がある．
+	%更に，下り通信を受信するSTA（Station）とAP（Access Point）へ上り通信を行うSTAが異なるUFD（user-multiplexing Unidirectional Full-Duplex）通信においては，
+	更に，あるSTA（Station）からAP（Access Point）への上り通信とAPから別のSTAへの下り通信を同時に同一周波数帯で行うUFD（user-multiplexing Unidirectional Full-Duplex）通信においては，
+	上り通信信号が下り通信信号に干渉するユーザ間干渉によってスループットが低下するという問題がある．
+	それに対し，ユーザ間干渉が少なくなるようなSTA組を選択しスループットを最大化する手法の先行研究がなされているが，
 	STA間の不公平性やSTAの遅延時間の増大といった課題が残されている．
 	\par
-	本論文では，この2つの問題に対して解決を図る．
-	まず，前者のフレーム時間長の違いによる無駄時間の発生に対しては，フレーム時間長最適化手法を提案する．
+	本論文では，この三つの課題に対して解決を図る．
+	まず，フレーム時間長の違いによる無駄時間の発生に対してはフレーム時間長最適化手法を提案する．
 	フレームアグリゲーション技術を用いて，同時に送信される二つのデータフレームの内，
-	一方のフレームの時間長を最適化問題を解くことで他方のフレームの時間長に揃え，無駄時間を削減する．
+	一方のフレーム時間長を最適化問題を解くことで他方のフレームの時間長に揃え，無駄時間を削減する．
 	計算機シミュレーションにより，提案手法が無駄時間を削減し，スループットを向上させることを示す．
 	次に，後者のUFD通信に関する問題に対しては，公平性を改善するための送受信STA選択手法を提案する．
 	提案手法では，STA間の公平性を考慮したSTA選択を最適化問題として定式化し，各STA組によって通信が行われる確率を求める．
 	得られた確率をもとに送受信を行う2台のSTAを確率的に決定する．
-	さらに，遅延時間を削減するためにUFD通信加え，上りOFDMA（Orthogonal Frequency Division Multiple Access）を用いるためのSTA選択手法を提案する．
-	OFDMAによって上り通信を多元化することでSTAの送信機会を増加させ，遅延時間を削減する．
-	計算機シミュレーションにより，提案手法が公平性の改善とスループットとのトレードオフの調整，遅延時間の削減が実現されることを示す．
+	また，スループットの向上と公平性の改善はトレードオフの関係にあるため，その調整を可能にする．
+	更に，遅延時間を削減するためにUFD通信に加え，上りOFDMA（Orthogonal Frequency Division Multiple Access）方式を用いるためのSTA選択手法を提案する．
+	OFDMA方式によって上り通信を多元化することでSTAの送信機会を増加させ，遅延時間を削減する．
+	計算機シミュレーションにより，提案手法が公平性の改善と遅延時間の削減が実現されることを示す．
 \end{jabstract}
 
 \begin{eabstract}				% 英文梗概
-	An in-band full-duplex system is one of the solutions for improving the throughput performance of wireless local area networks (WLANs), which allows nodes to transmit and receive simultaneously in the same frequency band. In in-band full-duplex WLANs, the difference of time length of data frames transmitted by an access point (AP) and a station (STA) wastes the frequency channel and decreases the throughput performance. Moreover, in the user-multiplexing unidirectional full-duplex (UFD) communication, inter-user interference decrease the throughput performance. To mitigate the inter-user interference, STA-pair selection schemes have been discussed.
-	However, since these schemes select pairs of STAs so that the system throughput is maximized, they could cause unfairness and long transmission delays of STAs.
+	An in-band full-duplex system is one of key techniques to improve the throughput performance of wireless local area networks (WLANs), which allows nodes to transmit and receive simultaneously in the same frequency band. In in-band full-duplex WLANs, the difference of time length of two data frames transmitted by an access point (AP) and a station (STA) wastes the frequency channel and decreases the throughput performance. Moreover, in the user-multiplexing unidirectional full-duplex (UFD) communication,  where a STA transmits to a AP and the AP transmit to another STA, inter-user interference decreases the throughput performance. To mitigate the inter-user interference, STA-pair selection schemes have been discussed.
+	These schemes select pairs of STAs so that the system throughput is maximized.
+	However they cause unfairness and long transmission delays of STAs.
 	\par
-	This thesis proposes two schemes to solve these peoblems. First, we propose frame length optimization scheme to reduce the wasted time and improve the throughput performance. Using the frame aggregation technique, the scheme adjusts the time length of a data frame to that of the data frame transmitted simultaneously. Simulation results show that the proposed scheme reduces the wasted time and improves the throughput performance. Second, we propose a STA-pair selection scheme to improve the fairness between STAs. In the scheme, AP solves an optimization probelm and get access probability of each STA-pair. Then one STA-pair is selected based on the probability. The objective function of the optimization problem considering the fairness increases transmission opportunity of STAs under not good channel condition. Moreover, we propose a scheme using uplink orthogonal frequency division multiple access (OFDMA) system to mitigate the transmission delays of STAs. Simulation results show that the fairness is improved and transmission delays are decreased.\\
+	This thesis proposes three schemes to solve these problems. First, this thesis proposes a frame length optimization scheme to reduce the wasted time and improve the throughput performance. Using the frame aggregation technique, the scheme adjusts the time length of a data frame to that of the data frame transmitted simultaneously. Simulation results show that the proposed scheme reduces the wasted time and improves the throughput performance. Second, this thesis proposes a STA-pair selection scheme for the UFD communication to improve the fairness between STAs. In this scheme, the AP solves an optimization probelm and get access probabilities of each STA-pair. Then one STA-pair is selected based on the probabilities. The objective function of the optimization problem considering the fairness increases transmission opportunities of STAs under bad channel conditions.
+	Finally, this thesis proposes a scheme applying uplink orthogonal frequency division multiple access (OFDMA) system to the UFD communication to mitigate the transmission delays of STAs.
+	Simulation results show that the fairness is improved and transmission delays of STAs are decreased.\\
 \end{eabstract}
 
 \tableofcontents				% 目次の出力
@@ -147,82 +152,84 @@
 急増するトラヒックにより2.4\,GHz帯は逼迫しており，近い将来5\,GHz帯も同様の状態になることで，
 スループットの低下が問題となる．
 そのような状況において，無線LANシステムの大容量化が望まれる．
-大容量化を実現する方法の1つとして，無線LANでの同一周波数帯における全二重通信が有望である．
-全二重通信とは，ある端末における送信と受信が時分割や周波数分割で行われる従来の半二重通信と異なり，
-ある端末が送受信を同時に同一周波数帯で行う方式である．
-全二重通信を無線LANに適用することで，従来の半二重通信の無線LANと比較して周波数利用効率を向上させることができる．
+大容量化を実現する方法の一つとして，無線LANでの同一周波数帯における全二重通信技術が有望である．
+全二重通信とは，あるノードにおける送信と受信が時分割や周波数分割で行われる従来の半二重通信と異なり，
+あるノードが送受信を同時に同一周波数帯で行う方式である．
+1998年に1.8\,GHz帯移動通信における全二重通信システムが~\cite{fdstart}によって実験的に示されて以来，
+全二重通信に関する数多くの研究がなされている~\cite{adhocfd,achifd,realtimefd,asynfd,baifd}．
 全二重通信無線LANには，1台のAP（Access Point）と1台のSTA（Statioin）が互いに送受信を同時に行うBFD（Bidirectional Full-duplex）通信と，
-1台のAPとAPへの上り通信を行うSTA，APからの下り通信を受信するSTAの3台によるUFD（user-multiplexing Unidirectional Full-Duplex）通信の2種類がある．
+1台のAPとAPへの上り通信を行うSTA，APからの下り通信を受信するSTAの3台によるUFD（user-multiplexing Unidirectional Full-Duplex）通信，
+更に，1台のAPと1台のSTAの通信をRN（Relay Node）によって中継するFDリレー通信の三種類がある~\cite{fdsurvey}．
 \par
 全二重通信無線LANには，従来の半二重通信には無かった自己干渉と呼ばれる干渉が存在する．
 自己干渉とは，送受信を同時に同一周波数帯で行った際に，
 受信側において自身の送信信号が干渉信号として受信される干渉である．
 全二重通信無線LANを実現するためにはこの自己干渉を除去する必要があり，これを実現する技術を自己干渉除去技術と呼ぶ．
-自己干渉における干渉信号は干渉を受ける端末自身が送信した信号であるため，干渉信号をある程度予測することが可能であり，
+自己干渉における干渉信号は干渉を受けるノード自身が送信した信号であるため，干渉信号をある程度予測することが可能であり，
 最大110\,dBの干渉除去が可能であることが示されている~\cite{stanford1,fdmac}．
 こうした自己干渉除去技術の発展によって全二重通信無線LANの実現可能性が高まってきている．
-しかし，全二重通信無線LANには自己干渉の他にも課題が存在する．
+しかし，全二重通信無線LANには自己干渉の他にも検討すべき課題が存在する．
 
 \par
-本論文では，大きく分けて2つの課題に対して議論する．
-1つは全二重通信無線LANに向けたMAC（Media Access Control）プロトコルにおける課題についての提案である．
-全二重通信無線LANに向けたMACプロトコル\cite{fdmac,contra,janus}が提案されているが，
-これらのMACプロトコルでは，同時に行われる2つの通信のうち一方が先に終了すると，もう一方が終了するまで
-1つの通信しか行っていない半二重通信状態となった無駄時間が生じる．
+本論文では，全二重通信無線LANのメディアアクセス制御における三つの課題を解決する．
+第一は，異なる長さのデータフレームを同時に送受信することで生じるチャネル利用効率の低下である．
+全二重通信無線LANに向けたMAC（Media Access Control）プロトコル\cite{fdmac,contra,janus}がこれまで提案されているが，
+これらのMACプロトコルでは，同時に行われる二つの通信のうち一方が先に終了すると，もう一方が終了するまで
+一つの通信しか行っていない半二重通信状態となった無駄時間が生じる．
 この無駄時間は本来であれば通信を行える帯域が空いてしまっているため，
 常に全二重通信を行った場合と比べてスループットが低下するといった問題や，
-帯域が空いた時間にACK（Acknowledgement）フレームや他端末のデータフレームの送信が行われ，
+帯域が空いた時間にACK（Acknowledgement）フレームや他ノードのデータフレームの送信が行われ，
 衝突が発生するといった問題が生じる．
-本論文では，送受信されるフレームの時間長を最小化し無駄時間をなくすために，
+本論文では，送受信されるフレームの時間長差を最小化し無駄時間をなくすために，
 フレーム時間長最適化を提案する．
-提案方式では，フレームアグリゲーションと呼ばれる複数のデータフレームを1つに連結する技術を用いて，
-同時に送信される2つのデータフレーム時間長を最小化する．
+提案方式では，フレームアグリゲーションと呼ばれる複数のデータフレームを一つに連結する技術を用いて，
+同時に送信される二つのデータフレーム時間長を最小化する．
 
 \par
-もう1つの課題は，ユーザ間干渉を低減するための手法における課題にである．
+第二の課題は，ユーザ間干渉を低減するための手法における課題である．
 ユーザ間干渉とは，UFD通信において上り通信を行っているSTAの送信信号が下り通信の信号に与える干渉である．
 ユーザ間干渉は自己干渉のように干渉波を予測することができないため，干渉を除去することが難しい．
 ユーザ間干渉は2台のSTAの位置やSTAの送信電力に依存するため，
 このユーザ間干渉の影響を低減することを目的として，干渉の大きさを考慮して適切なSTAの組み合わせを選び出すことや，
 送信電力制御を行う手法が提案されている~\cite{contra,janus, fdmac3, goyal,promac}．
-\cite{fdmac3}ではユーザ間干渉をの影響をより小さくするために2台のSTAが隠れ端末である組み合わせのみを選択し，
-\cite{janus,goyal}では事前に収集した各STAの組み合わせ毎の干渉の大きさを用いて，
+\cite{fdmac3}ではユーザ間干渉の影響をより小さくするために2台のSTAが隠れ端末である組み合わせのみを選択し，
+\cite{janus,goyal}では事前に収集した各STAの組み合わせ毎の干渉の大きさを用いており，
 ~\cite{contra}では各STAの組み合わせ毎の過去の全二重通信の成功確率を用いて組み合わせを決定する．
-また~\cite{promac}では，STAの組み合わせ毎の干渉量から合計スループットを推定し，
+また，~\cite{promac}ではSTAの組み合わせ毎の干渉量から合計スループットを推定し，
 その値を最大化するSTAの組み合わせを確率的に選択する方式を提案している．
 加えて送信電力制御も行っている．
-\par
-しかし，これらの手法では干渉が少ないような条件の良いSTAが存在すると組み合わせの選択に大きく偏りを生じ，公平性が低下する．
+しかし，これらの手法では干渉が少ない条件の良いSTAが存在すると組み合わせの選択に大きく偏りを生じ，公平性が低下する．
 また，QoS（Quality of Service）制御に関する議論はなされておらず，
 例えば音声通話などの低遅延を要求するアプリケーションサービスを利用するSTAに対しても干渉量やスループットを基準にSTAを選択するため，
 送信機会が得られず遅延が大きくなる可能性がある．
+\par
 本論文では，既存研究~\cite{promac}で議論される確率的なSTA選択手法をもとに，
 STA間の送信機会の公平性を改善するための目的関数とSTA毎の遅延要求に応じたQoS制御手法に関して提案する．
 スループットの期待値を最大化することを目的とした既存研究に対し，提案方式では各STAの送信待機時間の項を目的関数に設け，
 送信機会を得られず送信待機時間が長くなっているSTAに送信機会を与えることで，公平性の改善を行う．
-さらに，低遅延を要求するSTAの最低送信確率を向上させることでQoSをの改善を図る．
+更に，低遅延を要求するSTAの最低送信確率を向上させることでQoSの改善を図る．
 
 \par
-また，既存研究は半二重通信と比較して上り通信を行うSTAの遅延時間が増大するという課題が残っている．
+第三の課題は，既存研究は半二重通信と比較して上り通信を行うSTAの遅延時間が増大するという課題である．
 これは，UFD通信ではユーザ間干渉により伝送速度が低下するため一回の送信時間が増加し，
 かつ，下り通信の送信頻度が増加するため，半二重通信と比較してSTAの送信頻度が低下するためである．
 上り通信の遅延時間の増大は，TCP（Transmissioin Control Protocol）下り通信におけるTCP-ACKパケットの遅延を増加させ，
 結果的にTCPスループットの低下が生じる~\cite{rtt}．
-本論文では，遅延時間削減に向け，UFD通信の上り通信にOFDMAを適用した無線LANと本無線LANにおける送受信STA選択手法を提案する．
-提案方式では，OFDMA導入により送受信STAの選択において複数の上り通信STAを選択可能とし，
+本論文では，遅延時間削減に向け，UFD通信の上り通信にOFDMA（Orthogonal Frequency Division Multiple Access）方式を適用した無線LANと本無線LANにおける送受信STA選択手法を提案する．
+提案方式では，OFDMA方式導入により送受信STAの選択において複数の上り通信STAを選択可能とし，
 STAの送信機会を向上することで遅延を削減する．
-提案方式では，前述のUFD通信の公平性改善を目的とした提案における送受信STA選択最適化問題を拡張し，上りOFDMAに対応したSTA選択を可能とする．
-提案手法では，半二重通信，UFD通信，上りOFMDA，UFD通信と上りOFDMAの組み合わせの4つの通信方式を適応的に切り替え，STA選択を行う．
+提案方式では，前述のUFD通信の公平性改善を目的とした提案における送受信STA選択最適化問題を拡張し，上りOFDMA方式に対応したSTA選択を可能とする．
+提案手法では，半二重通信，UFD通信，上りOFMDA方式，UFD通信と上りOFDMA方式の組み合わせの4つの通信方式を適応的に切り替え，STA選択を行う．
 送受信STA組を適応的に選択することで，干渉が大きくUFD通信を行えないような位置にあるSTAは半二重通信を行い，
 干渉が小さく，大きなスループットを期待できるSTAにはUFD通信を用い，
-多くのSTAへ送信機会を与えたい場合はOFDMAを用いるといったような状況に応じた制御が可能となる．
+多くのSTAへ送信機会を与えたい場合はOFDMA方式を用いるといったような状況に応じた制御が可能となる．
 \par
-本論文では，それぞれの提案方式に対してシミュレーション評価を行い，性能を確認する．
+本論文では，それぞれの提案方式に対して計算機シミュレーション評価を行い，性能を評価する．
 \par
 本論文の構成は以下のとおりである．
 まず，第2章で既存無線LANに関する技術や，全二重通信無線LANに関する先行研究について述べる．
-次に，第3章では各問題に対して，提案を行う．
-第4章では，提案方式の性能をシミュレーションによって評価する．
+次に，第3章では各課題に対して，提案を行う．
+第4章では，提案方式の性能を計算機シミュレーションによって評価する．
 最後に，第5章で本論文を総括する．
 
 \section{関連技術}
@@ -232,41 +239,41 @@ STAの送信機会を向上することで遅延を削減する．
 			そのため，{IEEE} 802.11で定められた無線LAN においては，
 			フレームの衝突を避けるためにCSMA/CA（Carrier Sense Multiple Access/Collision Avoidance）を用いる\cite{mori}．
 			このCSMA/CAでの通信手順では，
-			まず，各端末はデータフレームの送信を開始する前にキャリアセンスを行うことで，
+			まず，各ノードはデータフレームの送信を開始する前にキャリアセンスを行うことで，
 			チャネルが未使用（アイドル）状態であるかどうか確認する．
 			キャリアセンスの結果，DIFS（Distributed Interframe Space）と呼ばれる期間（IEEE 802.11aでは34\,$\mu$s）チャネルがアイドルであれば，
-			さらにバックオフ時間だけキャリアセンスを続行する．
+			更にバックオフ時間だけキャリアセンスを続行する．
 
 			\par
-			このバックオフ時間は，[0〜CW（Contention Window）]内の一様な分布から生成される乱数$m_b$を用いて以下の式で決定される．
+			このバックオフ時間は，[0,CW（Contention Window）]内の一様な分布から生成されるバックオフカウンタ$m_{\rm b}$を用いて以下の式で決定される．
 			\begin{equation}
-				\mbox{バックオフ時間} = m_b \times \rm{SlotTime}
+				\mbox{バックオフ時間} = m_{\rm b} \times \rm{SlotTime}
 			\end{equation}
-			ただし，SlotTimeは規格によって定められた定数であり，IEEE 802.11aでは9\,$\mu$sである．
-			バックオフカウンタは，SlotTimeごとにを1ずつ減算していくといった方法でカウントダウンを行う．
-			さらに，CWはその最小値を$\rm{CW_{min}}$，最大値を$\rm{CW_{max}}$，再送回数を$n_{\rm retry}$とすると，
+			ただし，SlotTimeは規格によって定められた定数であり，IEEE 802.11aでは9\,$\mu$sである~\cite{stda}．
+			バックオフカウンタは，SlotTimeごとに$m_{\rm b}$を1ずつ減算していくといった方法でカウントダウンを行う．
+			更に，CWはその最小値を$\rm{CW_{min}}$，最大値を$\rm{CW_{max}}$，再送回数を$n_{\rm retry}$とすると，
 			\begin{equation}
 				\rm{CW} = \min \left\{ (\rm{CW_{min}} + 1)\times 2^{n_{\rm retry}} -1,\rm{CW_{max}}\right\} \label{eq:cw}
 			\end{equation}
 			で定められる．
-			このように，バックオフカウンタが端末ごとにランダムに決定されることで，衝突の確率を低減している．
-			さらに，再送回数に応じてCWを増大させることで，各端末が同じバックオフカウンタを選択する確率を下げ，
+			このように，バックオフカウンタがノードごとにランダムに決定されることで，衝突の確率を低減している．
+			更に，再送回数に応じてCWを増大させることで，各ノードが同じバックオフカウンタを選択する確率を下げ，
 			連続した衝突が発生する確率を下げている．
-			また，再送回数の上限をリトライリミットといい，これを超えると再送を諦め，該当フレームを破棄し，
+			また，再送回数の上限をリトライリミットと呼び，再送回数がこれを超えると再送を諦め，該当フレームを破棄し，
 			CWを最小値$\rm{CW_{min}}$にリセットする．
 
 			\par
-			DIFS時間に続いて，以上のように決定されたバックオフ時間の間チャネルがアイドルであればデータフレームの送信を開始する．
-			このバックオフ時間中に他の信号を検出した端末は残ったバックオフカウンタを1つ減算した値を持ち越して待機状態となる．
-			データフレームを正常に受信した端末は，その受信完了時点からSIFS（Short Interframe Space）時間（IEEE 802.11aでは16\,$\mu$s）待った後ACKフレームを返送する．
-			データフレームを送信した端末は，送信端末からのACKフレームを正常に受信できれば，
+			DIFS時間に続いて，以上のように決定されたバックオフ期間中チャネルがアイドルであればデータフレームの送信を開始する．
+			このバックオフ期間中に他の信号を検出したノードは残ったバックオフカウンタを一つ減算した値を持ち越して待機状態となる．
+			データフレームを正常に受信したノードは，その受信完了時点からSIFS（Short Interframe Space）時間（IEEE 802.11aでは16\,$\mu$s）待った後ACKフレームを返送する．
+			データフレームを送信したノードは，送信ノードからのACKフレームを正常に受信できれば，
 			データフレームの送信が正常に行われたと判断される．
 			逆に，ACKタイムアウトと呼ばれる時間だけ待ってもACKフレームが返送されなければ，
 			データフレームは正しく相手に届かなかったと判断し，データフレームの再送を行う．
 
 			\par
 			\ifnum\value{flagFig}=1{
-			\begin{figure}[t]
+			\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{fig/csmaca.eps}
 					\caption{CSMA/CAの通信手順}
@@ -276,36 +283,36 @@ STAの送信機会を向上することで遅延を削減する．
 			例として，図\ref{fig:csmaca}に1台のAPに対して3台のSTAが上り通信を行う場合を示す．
 			まず，3台のSTAはDIFS時間チャネルがアイドルであることをキャリアセンスにより確認すると，バックオフのカウントダウンに入る．
 			そして，最初にバックオフ時間が終了したSTA 1がデータフレームの送信を開始する．
-			STA 2，3はバックオフカウンタの値を1つ減算して，待機状態となる．
+			STA 2，STA 3はバックオフカウンタの値を一つ減算して，待機状態となる．
 			APはSTA 1からデータフレームを受け取った後，ACKフレームをSTA 1に返送する．
 			これで，STA 1の送信が完了したこととなり，STA 1には新たなバックオフカウンタが設定される．
 			STA 1が正常にACKフレームを受信した後，各STAはDIFS時間チャネルがアイドルであることを確認し，
 			バックオフのカウントダウンを始める．
-			その後，STA 2，3が同時にバックオフ時間を終えたため，同時にデータフレームを送信してしまい，
+			その後，STA 2，STA 3が同時にバックオフ時間を終えたため，同時にデータフレームを送信してしまい，
 			衝突が発生している．
 			この場合，APはデータフレームを正しく受信できないので，ACKフレームを返送しない．
-			STA 2，3はACKタイムアウト分の時間待ってもACKフレームが返ってこないため，
+			STA 2，STA 3はACKタイムアウト分の時間待ってもACKフレームが返ってこないため，
 			自身が送信したデータフレームが正しく受信されなかったと判断し，再送を試みる．
-			この際，式（\ref{eq:cw}）における再送回数が$n_{\rm retry}=1$となることで，STA 2，3のCWが大きくなり，
+			この際，式（\ref{eq:cw}）における再送回数が$n_{\rm retry}=1$となることで，STA 2，STA 3のCWが大きくなり，
 			同じバックオフカウンタを選ぶ確率が減るために再度衝突する確率が減少する．
 
 			\par
 			このように，CSMA/CA方式ではキャリアセンスとバックオフ制御によって，
 			同時送信によるフレームの衝突を避ける．
-			しかし，端末同士がキャリアセンス範囲外にある場合，
-			一方の端末がフレーム送信しているかどうかを他方の端末は検知することができない．
-			したがって，一方の端末がフレーム送信中にも関わらず他方の端末がフレーム送信を行うため，
+			しかし，ノード同士がキャリアセンス範囲外にある場合，
+			一方のノードがフレーム送信しているかどうかを他方のノードは検知することができない．
+			したがって，一方のノードがフレーム送信中にも関わらず他方のノードがフレーム送信を行うため，
 			フレーム衝突が多発してスループットが減少する．
 			この問題を隠れ端末問題と呼ぶ．
-			隠れ端末問題の対策としてCSMA/CAではRTS（Request To Send）/CTS（Clear To Send）アクセス手順を用いる．
-			この方式では，送信を試みる端末はバックオフ時間待った後にデータフレームを送信するのではなく，
+			隠れ端末問題の対策としてCSMA/CA方式ではRTS（Request To Send）/CTS（Clear To Send）アクセス手順を用いる．
+			この方式では，送信を試みるノードはバックオフ時間待った後にデータフレームを送信するのではなく，
 			まず，RTSフレームを送信する．
-			RTSフレームの送信先端末は，RTSフレーム受信からSIFS時間待った後にCTSフレームをRTSフレームを送信した端末へ返送する．
-			RTSフレームを送信した端末は，CTSフレームを受信すると，そこからSIFS時間待った後データフレームを送信する．
+			RTSフレームの送信先ノードは，RTSフレーム受信からSIFS時間待った後にCTSフレームをRTSフレームを送信したノードへ返送する．
+			RTSフレームを送信したノードは，CTSフレームを受信すると，そこからSIFS時間待った後データフレームを送信する．
 			RTSフレームとCTSフレームはデータフレームと比べて短いフレームであり，
 			内部にデュレーションフィールドと呼ばれる部分を持つ．
 			デュレーションフィールドにはRTS/CTSフレームに続くデータフレーム送信のためにチャネルが占有される時間を格納している．
-			RTS/CTSフレームを送信した2台の端末以外の端末は，RTS/CTSフレームのいずれかを受信することで，
+			RTS/CTSフレームを送信した2台のノード以外のノードは，RTS/CTSフレームのいずれかを受信することで，
 			続けて行われるデータフレーム送信に必要な時間を知ることができ，
 			その間データフレームの送信を待機することで隠れ端末による衝突を回避する．
 			また，RTSフレームは短いフレームであるため，仮に衝突が発生してもチャネルを占有する時間が短く，システム全体に与える影響は小さい．
@@ -314,7 +321,7 @@ STAの送信機会を向上することで遅延を削減する．
 
 			\par
 			例として，図\ref{fig:rtscts}にAPに対して，
-			STA 1，2，3がRTS/CTS方式を用いて上り通信を試みる様子を示す．
+			STA 1，STA 2，STA 3がRTS/CTS方式を用いて上り通信を試みる様子を示す．
 			ただし，STA 1とSTA 3は隠れ端末であるとする．
 			このような場合に，RTS/CTS方式を用いないCSMA/CAによる制御を行うと，
 			STA 1がデータフレームの送信を開始しても，STA 1に対して隠れ端末であるSTA 3はそれをキャリアセンスできず，
@@ -326,7 +333,7 @@ STAの送信機会を向上することで遅延を削減する．
 			このとき，STA 3はAPが返送するCTSフレームを受信できるため，
 			これからチャネルがSTA 1によって使用される時間がわかり，自身の送信を待機することが可能となり衝突を防ぐことができる．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.9\textwidth]{fig/rtscts2.eps}
 					\caption{RTS/CTSを用いたCSMA/CAでの通信手順}
@@ -335,7 +342,7 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{figure}}\fi
 
 		\subsubsection{フレームアグリゲーション}
-			{IEEE} 802.11nで定められた無線LAN規格には，複数のデータフレームを1つにまとめて送信するフレームアグリゲーションと呼ばれる機能がある\cite{stdn}．
+			{IEEE} 802.11nで定められた無線LAN規格には，複数のデータフレームを一つにまとめて送信するフレームアグリゲーションと呼ばれる機能がある\cite{stdn}．
 			このフレームアグリゲーションについて述べる前に，まず，通常のデータフレームの構造を図\ref{fig:frame}\subref{fig:dataframe}に示す．
 			データフレームにおいて，上位レイヤと受け渡しする部分をMSDU（MAC Service Data Unit）と呼び，
 			それにMACヘッダと誤り訂正のための冗長符号であるFCS（Frame Correction Sequence）を加えた部分をMPDU（MAC Protocol Data Unit）と呼ぶ．
@@ -347,21 +354,21 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:frame}\subref{fig:a-mpdu}にA-MPDUのフレーム構造を示す．
 			ただし，アグリゲーションした際に個々のMSDU，MPDUに付加されるサブフレームヘッダは省略している．
 			A-MSDUはMACヘッダやFCSを含まずにフレームを連結するのでオーバヘッドが少なくて済むが，
-			FCSが複数のMSDUに対して1つしかないため，データフレーム全体の正誤しか判定できず，
-			連結したMSDUのうち1つでも受信に失敗すると連結したMSDUすべてを再送する必要がある．
-			一方，A-MPDUは，1つのMSDUに対して1つのMACヘッダとFCSを持つためオーバヘッドが大きい一方，
+			FCSが複数のMSDUに対して一つしかないため，データフレーム全体の正誤しか判定できず，
+			連結したMSDUのうち一つでも受信に失敗すると連結したMSDUすべてを再送する必要がある．
+			一方，A-MPDUは，一つのMSDUに対して一つのMACヘッダとFCSを持つためオーバヘッドが大きい一方，
 			MSDUごとに誤り検出が可能であるため受信に失敗したMSDUのみ再送すればよいという利点がある．
-			また，A-MPDUではMSDUごとにACKが必要となるので，複数のACKをまとめたBlockACKを用いる．
-			BlockACKは複数のMSDUに対して，正常に受信できたかどうかをビットマップによって示す．
-			このBlockACKは通常のACKに比べてフレーム長が長い．
+			また，A-MPDUではMSDUごとにACKフレームが必要となるので，複数のACKフレームをまとめたBlockACKを用いる．
+			BlockACKフレームは複数のMSDUに対して，正常に受信できたかどうかをビットマップによって示す．
+			このBlockACKフレームは通常のACKフレームに比べてフレーム長が長い．
 			IEEE802.11nではA-MSDUは連結後のMSDU部分が最大8\,kBまで，
 			A-MPDUは連結後のMPDU部分が最大64\,kBまでと定められている\cite{stdn}．
 			加えて，図\ref{fig:frame}\subref{fig:a-mpdu}に示すように，
 			A-MPDUによってアグリゲーションされるデータフレームのMSDUは，A-MSDUによってアグリゲーションされたMSDUであってもよく，
 			A-MSDUとA-MPDUによる入れ子構造が可能となっている．
-			本論文では，この2つのうちA-MSDUのみを用いる．
+			本論文では，この二つのうちA-MSDUのみを用いる．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\subfloat[通常のデータフレームの構造]{
 						\includegraphics[width=0.4\textwidth]{fig/dataframe.eps}
@@ -379,46 +386,46 @@ STAの送信機会を向上することで遅延を削減する．
 				\end{center}
 			\end{figure}}\fi
 
-		\subsubsection{OFDMとOFDMA}
-			IEEE 802.11無線LANでは送信信号の変調にOFDM（Orthogonal Frequency Division Multiplexing）が用いられる．
-			OFDMとは，周波数利用効率を高めるため，それぞれのサブキャリアに直交性を持たせ，サブキャリア間隔を狭める方式である．
-			また，OFDMの適用によりマルチキャリアとなることで，シングルキャリアのような高速な信号から，
+		\subsubsection{OFDM方式とOFDMA方式}
+			IEEE 802.11無線LANでは送信信号の変調にOFDM（Orthogonal Frequency Division Multiplexing）方式が用いられる．
+			OFDM方式とは，周波数利用効率を高めるため，それぞれのサブキャリアに直交性を持たせ，サブキャリア間隔を狭める方式である．
+			また，OFDM方式の適用によりマルチキャリアとなることで，シングルキャリアのような高速な信号から，
 			複数の低速な信号に分割することができ，マルチパス歪に強くなるという利点がある．
-			図\ref{fig:ofdm_ofdma}\subref{fig:ofdm_ch}，\subref{fig:ofdma_ch}にFDM（Frequency Division Multiplexing）と
-			OFDMのサブキャリア配置の概要を示す．
-			FDMでは隣接するサブキャリアが直交していないため，
+			図\ref{fig:ofdm_ofdma}\subref{fig:ofdm_ch}，\subref{fig:ofdma_ch}にFDM（Frequency Division Multiplexing）方式と
+			OFDM方式のサブキャリア配置の概要を示す．
+			FDM方式では隣接するサブキャリアが直交していないため，
 			サブキャリア同士の干渉が発生しないようガードバンドと呼ばれる伝送に用いない空の帯域が必要となる．
-			一方，OFDMは隣接サブキャリアが互いに直交しているため，周波数的な重なりを持っていても干渉することなく分離可能である．
-			IEEE 802.11a規格では1つのチャネルに52本のサブキャリアが存在し，内4本が制御用，残り48本が伝送用として用いられる．
+			一方，OFDM方式は隣接サブキャリアが互いに直交しているため，周波数的な重なりを持っていても干渉することなく分離可能である．
+			IEEE 802.11a規格では一つのチャネルに52本のサブキャリアが存在し，内4本がパイロット信号用，残り48本がデータ伝送用として用いられる．
 			\par
-			OFDMAとは，複数のユーザに1つのチャネルにあるサブキャリアを割り当て並列伝送する方式である．
-			OFDMではあるチャネルのすべてのサブキャリアを1つの通信に用いるのに対し，
-			OFDMAではそれらのサブキャリアを複数ユーザに割り当てることで，複数ユーザとの並列伝送を実現するという違いがある．
-			現在策定が進められているIEEE 802.11axにおいて，OFDMAは，短いフレームの並列伝送による周波数利用効率の向上や，
-			TCP（Transmissioin Control Protocol）-ACKの遅延時間削減によるTCPスループットの向上を実現する技術として期待されている~\cite{ofdma}．
+			OFDMA方式とは，複数のユーザに一つのチャネルにあるサブキャリアを割り当て並列伝送する方式である．
+			OFDM方式ではあるチャネルのすべてのサブキャリアを一つの通信に用いるのに対し，
+			OFDMA方式ではそれらのサブキャリアを複数ユーザに割り当てることで，複数ユーザとの並列伝送を実現するという違いがある．
+			現在策定が進められているIEEE 802.11ax規格において，OFDMA方式は，短いフレームの並列伝送による周波数利用効率の向上や，
+			TCP（Transmissioin Control Protocol）-ACKパケットの遅延時間削減によるTCPスループットの向上を実現する技術として期待されている~\cite{ofdma}．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\subfloat[FDMのサブキャリア配置]{
 					\epsfig{file=fig/ofdm_ch.eps, scale=1}
 					\label{fig:ofdm_ch}
 				}
 				\hspace{20pt}
-				\subfloat[OFDMAのサブキャリア配置]{
+				\subfloat[OFDMのサブキャリア配置]{
 					\epsfig{file=fig/ofdma_ch.eps, scale=1}
 					\label{fig:ofdma_ch}
 				}
-				\caption{FDMとOFDMAのサブキャリアの配置}
+				\caption{FDMとOFDMのサブキャリアの配置}
 				\label{fig:ofdm_ofdma}
 			\end{figure}}\fi
 	\subsection{全二重通信無線LAN}
 		\subsubsection{全二重通信無線LANのシステムモデル}
-			本章では，全二重通信を無線LANに適用したシステムモデルについて述べる．
-			全二重通信無線LANでは，全二重通信を構成する端末の台数や位置関係によって，
+			本節では，全二重通信を無線LANに適用したシステムモデルについて述べる．
+			全二重通信無線LANでは，全二重通信を構成するノードの台数や位置関係によって，
 			適用条件が異なるため，それらを分類しモデル化する．
-			%まず，セカンダリセンダの送信先がプライマリセンダである2つの端末で構成されるモデルについて述べ，
+			%まず，セカンダリセンダの送信先がプライマリセンダである二つの端末で構成されるモデルについて述べ，
 			%次に，セカンダリセンダの送信先がプライマリセンダとは別の端末である3つの端末で構成されるモデルについて述べる．
-			%さらに，後者についてキャプチャ効果を用いた適用範囲の拡大について検討した．
+			%更に，後者についてキャプチャ効果を用いた適用範囲の拡大について検討した．
 			\par
 			図\ref{fig:model_pair}に示すように2台のAPとSTAが，
 			ペアとなって送受信を同時に．同一帯域で行う全二重通信をBFD（Bidirectional Full-Duplex）通信と呼ぶ．
@@ -426,9 +433,9 @@ STAの送信機会を向上することで遅延を削減する．
 			%通信手順は図\ref{fig:fdmac_protocol}\subref{fig:pair_protocol}に示す．
 			このBFD通信では，APとSTAの両方が全二重通信を行っているため，
 			AP，STAともに\ref{sec:interference}項で述べる自己干渉除去技術が必要である．
-			また，両端末の位置関係に特に制限はなく，互いに通信が可能な距離にあればよい．
+			また，両ノードの位置関係に特に制限はなく，互いに通信が可能な距離にあればよい．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.5\textwidth]{fig/bfd.eps}
 					\caption{BFD通信}
@@ -441,38 +448,39 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:model_ufd}に示すように1台のAPがあるSTAへの下り通信と別のSTAからの上り通信を同時に同一周波数帯で行う全二重通信を
 			UFD（user-multiplexing Unidirectional Full-Duplex）通信と呼ぶ．
 			本論文では，このUFD通信のうち，STA $j$からSTA $i$へのAPを介してのリレー通信ではなく，
-			STA $i$，$j$はそれぞれコアネットワークからの下りトラヒックの受信，コアネットワークへの上りトラヒックの送信を行っているものを扱う．
+			STA $i$，STA $j$はそれぞれコアネットワークからの下りトラヒックの受信，コアネットワークへの上りトラヒックの送信を行っているものを扱う．
 			このUFD通信ではAPが上り通信の受信と下り通信の送信を同時に同一帯域で行っている．
 			そのため，自己干渉はAPでのみ発生するため，APのみ自己干渉除去技術が利用可能であればよく，
 			従来の自己干渉除去技術を持たないSTAもUFD通信への参加が可能である．
 			また，このUFD通信にはBFD通信には存在しなかったユーザ間干渉と呼ばれる干渉が存在する．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.5\textwidth]{fig/ufd.eps}
 					\caption{UFD通信}
 					\label{fig:model_ufd}
 				\end{center}
 			\end{figure}}\fi
-			\begin{comment}
 			\par
-			さらに，図\ref{fig:model_relay}に示すようなAP-STA間の通信をRN（Relay Node）によって中継するFD（Full-Duplex）リレー通信がある．
-			これはAP-RN間の通信とRN-STA間の通信が同時に同一周波数帯で行われている．
-			FDリレー通信はAP-STA間の距離が大きい場合や伝搬環境が良くない場合に用いられる．
-			全二重通信を行っているのはRNのみである．
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			更に，図\ref{fig:model_relay}に示すようなAP--STA間の上り通信，あるいは，
+			下り通信をRN（Relay Node）によって中継するFD（Full-Duplex）リレー通信がある．
+			これはAP--RN間の通信とRN--STA間の通信が同時に同一周波数帯で行われている．
+			FDリレー通信はAP--STA間の距離が大きい場合や伝搬環境が良くない場合に用いられる．
+			全二重通信を行っているのはRNのみであるため，自己干渉除去技術はRNのみが利用可能であれば良い．
+			UFD通信同様，AP--STA間に干渉が存在する．
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.5\textwidth]{fig/model_relay.eps}
-					\caption{UFD通信}
+					\caption{FDリレー通信によるAP--STA間の下り通信}
 					\label{fig:model_relay}
 				\end{center}
 			\end{figure}}\fi
-		\end{comment}
+
 		\subsubsection{全二重通信無線LANにおける干渉}\label{sec:interference}
-			全二重通信無線LANには従来の無線LANには存在しなかった2つの干渉が存在する．
+			全二重通信無線LANには従来の無線LANには存在しなかった二つの干渉が存在する．
 			それは，自己干渉とユーザ間干渉である．
 			\par
-			自己干渉とは，ある端末が送信と受信を同じチャネルで同時に行うことによって，
+			自己干渉とは，あるノードが送信と受信を同じチャネルで同時に行うことによって，
 			自身の送信信号が受信信号に干渉することである．
 			BFD通信ではAPとSTAの両者で，UFD通信ではAPのみにおいて発生する．
 			全二重通信を無線LANに適用するにあたって，この自己干渉を除去することが必要不可欠である．
@@ -480,42 +488,42 @@ STAの送信機会を向上することで遅延を削減する．
 			\par
 			この自己干渉における干渉波にはいくつかの要素が存在する．
 			遅延波のように線形性を持った要素や，回路から発生するような非線形の要素，
-			さらには，増幅器や発振器から発生するランダムな要素である．
+			更には，増幅器や発振器から発生するランダムな要素である．
 			\cite{stanford1,fdmac}では，これら複数の要素からなる自己干渉を複数の段階にわけて除去している．
-			まず，1つ目は複数アンテナを用いた受動的な自己干渉除去である．
-			これは，1台の端末がアンテナを複数持つ場合に，
+			まず，第一は複数アンテナを用いた受動的な自己干渉除去である．
+			これは，1台のノードがアンテナを複数持つ場合に，
 			送受信アンテナの配置によって干渉波の伝搬損失を最大化することで
 			干渉波の影響を小さくすることを目指している．
-			2つ目はアナログ信号に対しての自己干渉除去である．
+			第二はアナログ信号に対しての自己干渉除去である．
 			自身がこれから送信するアナログ信号を遅延素子やアッテネータに通すことで，
 			これから到達するであろう干渉波を生成し，それを受信信号から取り除くといったものである．
-			3つ目は，前述2つの自己干渉除去を行った後，ADC（Analog Digital Convertor）を経た
+			第三は，前述二つの自己干渉除去を行った後，ADC（Analog to Digital Convertor）を経た
 			デジタル信号に対して行われる自己干渉除去である．
 			ここでは，まずアナログ信号に対する干渉除去と同様に，遅延波を生成して，
 			アナログ段階までで除去しきれなかった遅延波を除去する．
-			さらに，テイラー展開を用いた非線形要素の一般的なモデルで非線形要素を取り除く．
+			更に，テイラー展開を用いた非線形要素の一般的なモデルで非線形要素を取り除く．
 
 			\par
 			これらの方法を用いて，\cite{stanford1}では干渉波を110\,dB，\cite{fdmac}では85\,dB除去できることを示している．
 			特に，110\,dBの除去が可能であるということは，例えば，送信電力が20\,dBmであった場合，
-			自己干渉信号を$-$90\,dBmという端末自身が発生するノイズ・フロア程度まで落とし込むことが可能であり，
+			自己干渉信号を$-$90\,dBmというノード自身が発生する熱雑音程度まで低減することが可能であり，
 			十分実用に耐えうる値である．
 			\par
-			全二重通信無線LANに存在するもう1つの干渉，ユーザ間干渉とは図\ref{fig:model_ufd}に示すような
+			次に，ユーザ間干渉とは図\ref{fig:model_ufd}に示すような
 			STA $j$の送信信号がもう一方のSTA $i$の受信信号に干渉を及ぼす干渉である．
 			ユーザ間干渉では，干渉を受けるSTA $i$にとって干渉信号がSTA $j$の送信する未知の信号であるため，
 			干渉信号をある程度予測可能な自己干渉と異なり，容易に除去することができない．
-			このユーザ間干渉の大きさは，干渉源STAと被干渉STAの間の距離や干渉源STAの送信電力に依存するため，
+			このユーザ間干渉の大きさは干渉源STAと被干渉STAの間の距離や干渉源STAの送信電力に依存するため，
 			ユーザ間干渉の影響を低減するためには，送信を行うSTAと受信を行うSTAの適切な選択や送信電力制御が必要である．
 		\subsubsection{全二重通信無線LANにむけたMACプロトコルに関する既存研究}\label{sec:mac_problem}
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\subfloat[セカンダリセンダがプライマリセンダに送信する場合]{
 						\includegraphics[width=0.8\textwidth]{fig/fdmac_protocol.eps}
 						\label{fig:pair_protocol}}
 						\\
-						\subfloat[セカンダリセンダが別の端末に送信する場合]{
+						\subfloat[セカンダリセンダが別のノードに送信する場合]{
 						\includegraphics[width=0.8\textwidth]{fig/relay_protocol.eps}
 						\label{fig:relay_protocol}}
 						\caption{既存研究\cite{fdmac}による全二重通信無線LANのMACプロトコル}
@@ -524,18 +532,18 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{figure}}\fi
 
 			既存研究について述べる前に，プライマリセンダとセカンダリセンダという言葉の定義を述べる．
-			プライマリセンダとは，最初にデータフレームの送信を開始する端末のことである．
+			プライマリセンダとは，最初にデータフレームの送信を開始するノードのことである．
 			一方，セカンダリセンダとは全二重通信を行うために，プライマリセンダのデータフレーム送信に呼応して
-			データフレームの送信を開始する端末のことである．
+			データフレームの送信を開始するノードのことである．
 			APとSTAはプライマリセンダとセカンダリセンダの両方になりうる．
 			\par
 			\cite{fdmac}では，従来のRTS/CTSを用いたFD-MAC方式によって全二重通信を実現する．
 			図\ref{fig:fdmac_protocol}\subref{fig:pair_protocol}にセカンダリセンダの送信先がプライマリセンダである場合の通信手順を，
-			図\ref{fig:fdmac_protocol}\subref{fig:relay_protocol}にセカンダリセンダの送信先がプライマリセンダとは別の端末である場合の通信手順を示す．
-			まず，バックオフを終えた端末がプライマリセンダとなりRTSフレームを送信する．
+			図\ref{fig:fdmac_protocol}\subref{fig:relay_protocol}にセカンダリセンダの送信先がプライマリセンダとは別のノードである場合の通信手順を示す．
+			まず，バックオフを終えたノードがプライマリセンダとなりRTSフレームを送信する．
 			RTSフレームを受信したセカンダリセンダはCTSフレームを返送し，両者の同期を取る．
 			その後，プライマリセンダとセカンダリセンダが同時にデータフレームを送信する．
-			セカンダリセンダの送信先は，プライマリセンダかそれとは別の端末である．
+			セカンダリセンダの送信先は，プライマリセンダかそれとは別のノードである．
 			データフレームの送受信が完了した後は，同時にACKフレームを交換する．
 			このFD-MAC方式は従来の無線LANに存在するRTS/CTS方式を用いているため，後方互換性があるという利点がある．
 
@@ -547,10 +555,10 @@ STAの送信機会を向上することで遅延を削減する．
 			\begin{enumerate}
 				\item データフレームの送信を行わない無駄時間となりスループットが低下する．
 			 	\item ACKがプライマリセンダが送信するデータフレームと衝突する．
-			 	\item プライマリセンダの信号を検知できない他端末とフレームの衝突が発生する．
+			 	\item プライマリセンダの信号を検知できない他ノードとフレームの衝突が発生する．
 			\end{enumerate}
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.9\textwidth]{fig/relay_not_equal2.eps}
 					\caption{フレーム時間長が揃っていない場合の問題点}
@@ -561,18 +569,18 @@ STAの送信機会を向上することで遅延を削減する．
 			このような場合，セカンダリセンダは，自身のフレーム送信が終了すると，
 			プライマリセンダの送信が終了するまで待機する必要があり，
 			その間半二重通信となった無駄時間が生じ，全時間全二重通信を行った場合と比較してスループットが低下する．
-			また，受信端末が従来の端末であった場合，
-			受信端末はセカンダリセンダからのデータフレームの受信を終了した後，
+			また，セカンダリセンダからのデータフレームを受信するノードが従来のノードであった場合，
+			受信ノードはセカンダリセンダからのデータフレームの受信を終了した後，
 			SIFS時間でプライマリセンダにACKフレームを返送してしまうが，
 			セカンダリセンダはプライマリセンダからのデータフレームの受信中であるので，
-			セカンダリセンダにおいてプライマリセンダからのデータフレームと受信端末からのACKフレームが衝突してしまう．
+			セカンダリセンダにおいてプライマリセンダからのデータフレームと受信ノードからのACKフレームが衝突してしまう．
 			プライマリセンダが送信を終わるまで，
-			受信端末がACKフレームを返送しないように改良を加えたとしても，
-			プライマリセンダと受信端末が隠れ端末の関係にあると，
-			受信端末はプライマリセンダの送信終了検知できず，ACKフレームの返信タイミングがわからない．
-			したがって，プライマリセンダからのデータフレームと受信端末からのACKフレームが衝突してしまう．
-			さらに，フレーム時間長の差とSIFSを足しあわせた時間がDIFSよりも長い場合，
-			プライマリセンダの信号を受信できない端末は，
+			受信ノードがACKフレームを返送しないように改良を加えたとしても，
+			プライマリセンダと受信ノードが隠れ端末の関係にあると，
+			受信ノードはプライマリセンダの送信終了検知できず，ACKフレームの返信タイミングがわからない．
+			したがって，プライマリセンダからのデータフレームと受信ノードからのACKフレームが衝突してしまう．
+			更に，フレーム時間長の差とSIFSを足しあわせた時間がDIFSよりも長い場合，
+			プライマリセンダの信号を受信できないノードは，
 			セカンダリセンダのデータフレームの送信が終了した時点からACKフレームを送信するまでに
 			チャネルがDIFSだけアイドルであったと判断し送信を開始してしまい，
 			プライマリセンダのデータフレームと衝突を起こす．
@@ -582,16 +590,16 @@ STAの送信機会を向上することで遅延を削減する．
 			\par
 			この問題に対し，\cite{contra}ではビジートーン加えたContraFlow方式というMACプロトコルを提案している．
 			図\ref{fig:contra_process}にその手順を示す．
-			最初にバックオフを終えた端末がプライマリセンダとしてデータフレームの送信を開始する．
-			その送信先となった端末は，データフレームのPLCP（Physical Layer Convergence Protocol）ヘッダと
+			最初にバックオフを終えたノードがプライマリセンダとしてデータフレームの送信を開始する．
+			その送信先となったノードは，データフレームのPLCP（Physical Layer Convergence Protocol）ヘッダと
 			MACヘッダを受信した段階で自身が送信先であることを知り，
 			その後，セカンダリセンダとして自身もデータフレームの送信を開始する．
-			この際，CntraFlow方式では両者のデータフレーム時間長の差とACKフレームの受信が完了するまでの間をビジートーンによって埋める．
-			これにより，前述したACKフレームや他端末からのデータフレームとの衝突を防ぐことができる．
+			この際，ContraFlow方式では両者のデータフレーム時間長の差とACKフレームの受信が完了するまでの間をビジートーンによって埋める．
+			これにより，前述したACKフレームや他ノードからのデータフレームとの衝突を防ぐことができる．
 			しかし，チャネルが空いた時間はビジートーンによって埋まっているものの，
 			データフレームを送信しているわけではないため，スループットの低下という問題を解決できていない．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.7\textwidth]{fig/contra_process.eps}
 					\caption{ContraFlowの送信手順}
@@ -621,7 +629,7 @@ STAの送信機会を向上することで遅延を削減する．
 			一方，送信要求や情報要求などスケジューリングのために新たに定義されたフレームを多く用いることや，
 			スケジューリングのためのオーバヘッドが大きいことが欠点として挙げられる．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.9\textwidth]{fig/janus.eps}
 					\caption{Janus方式の送信手順}
@@ -631,17 +639,19 @@ STAの送信機会を向上することで遅延を削減する．
 
 			\par
 			これらContraFlow方式，Janus方式は，従来のIEEE 802.11規格にない新たなフレームや信号，
-			送信手順を用いているため，既にに広く普及している従来規格の無線LAN端末との
+			送信手順を用いているため，既に広く普及している従来規格の無線LAN端末との
 			後方互換性を持たず，普及には時間がかかると思われる．
 
 
 
-		\subsubsection{UFD通信におけるユーザ間干渉削減のための既存研究}\label{sec:ufd_pairing}
+		%\subsubsection{UFD通信におけるユーザ間干渉削減のための既存研究}\label{sec:ufd_pairing}
+			\par
+			次に，UFD通信におけるSTA選択に関する既存研究について述べる．
 			\ref{sec:interference}項で述べた通り，UFD通信におけるユーザ間干渉は自己干渉のように除去できないため，
 			適切なSTA組の選択や送信電力制御が必要である．
-			\cite{fdmac3}ではユーザ間干渉をなくすために下り通信を受信するSTA $i$と上り通信を送信する$j$が隠れ端末であるSTA組のみを選択している．
+			\cite{fdmac3}ではユーザ間干渉をなくすために下り通信を受信するSTA $i$と上り通信を送信するSTA $j$が隠れ端末であるSTA組のみを選択している．
 			こうすることで，STA $j$の送信信号がSTA $i$の受信信号へ干渉を及ぼす可能性は低くなる一方，
-			STA $i$と$j$が隠れ端末であるという限られた条件でしかUFD通信を行うことができない．
+			STA $i$とSTA $j$が隠れ端末であるという限られた条件でしかUFD通信を行うことができない．
 			実際には，干渉が及んだとしてもSINR（Signal to Interference plus Noise Ratio）が一定以上であれば通信可能であるため，
 			UFD通信を利用できる可能性を狭めてしまっていることになる．
 			\par
@@ -650,28 +660,28 @@ STAの送信機会を向上することで遅延を削減する．
 			自身が送信する宛先STA $i$を決定し，そのSTA $i$に対してSTA $j$とのUFD通信が可能かどうか問い合わせる．
 			問い合わせを受けたSTA $i$はSTA $j$からの干渉電力とAPからの所望信号電力のSIR（Signal to Interference Ratio）を算出し，
 			UFD通信が可能か返答を行う．
-			この手法により，UFD通信が成功する成功を高めることができる．
+			この手法により，UFD通信が成功する確率を高めることができる．
 
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{fig/contra.eps}
 					\caption{ContraFlow~\cite{contra}によるセカンダリセンダの送信先選択手法}
 					\label{fig:contra}
 				\end{center}
 			\end{figure}}\fi
-			前節で述べたContraFlow方式~\cite{contra}では，STA組毎に過去の全二重通信の成功率を記憶し，
+			前項で述べたContraFlow方式~\cite{contra}では，STA組毎に過去の全二重通信の成功率を記憶し，
 			それをもとにSTA組の決定を行っている．
 			例えば，図\ref{fig:contra}のように，最初にバックオフを終えたSTA 1がプライマリセンダとしてAPへ送信を開始した場合を考える．
-			STA 1から受信を開始したAPは，自分の送信相手をSTA 1，2，3，4から選択する必要がある.
-			このとき，STA 3，4はSTA 1との距離が近いため，干渉を強く受け全二重通信が成功する確率は低い．
+			STA 1から受信を開始したAPは自身の送信相手をSTA 1，STA 2，STA 3，STA 4から選択する必要がある.
+			このとき，STA 3，STA 4はSTA 1との距離が近いため，干渉を強く受け全二重通信が成功する確率は低い．
 			一方，STA 2はSTA 1からの干渉の影響が小さく，APからの信号を正常に受信できる可能性が高い．
 			また，STA 1を選択した場合はBFD通信となるため，自己干渉除去技術が十分であれば全二重通信が成功する確率が高い，
 			このことを，APは図中右のような過去の履歴から作成したリストによって判断する．
 			\par
 			\cite{promac}はシステムスループットの最大化を目的とし，
 			各STAの組み合わせの選択確率を変数とした最適化問題を解くことで各STAの選択確率を決定し，確率的なSTA選択を行う．
-			さらに，STA組決定後上り通信を行うSTA $j$の送信電力制御を行う．
+			更に，STA組決定後上り通信を行うSTA $j$の送信電力制御を行う．
 			システムスループットの大小，つまり，干渉の大小に応じて決定的にSTA組を選択するのではなく，
 			確率的にSTA組を選択することで公平性を担保することを目指している．
 			本論文では，このSTA選択手法を比較対象として用いるため詳細を述べる．
@@ -696,7 +706,7 @@ STAの送信機会を向上することで遅延を削減する．
 				{\mathcal C}_{\rm half} \equiv \{\sij\mid ij=0,\ \rij >\epsilon\}
 			\end{equation}
 			に対しても実効スループット$\rij$を推定する．
-			ここで，${\mathcal C} = {\mathcal C}_{\rm full} \cup {\mathcal C}_{\rm half}$とし，
+			ここで，${\mathcal C} \equiv {\mathcal C}_{\rm full} \cup {\mathcal C}_{\rm half}$とし，
 			\begin{align}
 				{\mathcal N}_i &\equiv \{i\mid(i,\ j)\in{\mathcal C}\}\\
 				{\mathcal N}_j &\equiv \{j\mid(i,\ j)\in{\mathcal C}\}
@@ -724,7 +734,7 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{align}
 			なお，この最適化問題は毎回あるいは複数のビーコン信号周期毎に解かれ，更新された確率$\pij$はビーコンフレームによってSTAに通知される．
 			\par
-			次に，得られた$\pij$を用いてSTA $i$，$j$を決定する方法を述べる．
+			次に，得られた$\pij$を用いてSTA $i$，STA $j$を決定する方法を述べる．
 			APは
 			\begin{equation}
 				p_{\rm d}^{(i)}= \sum_{j\in{\mathcal N}_j}p^{(i,\ j)},\ \forall i \in \{0\}\cup{\mathcal N}
@@ -751,12 +761,12 @@ STAの送信機会を向上することで遅延を削減する．
 			各STAは$[0,\ {\rm CW}^{(i^*,j)}_{\rm u}]$の一様分布から生成されるバックオフカウンタ$w_{\rm u}^{(i^*,j)}$を設定し，
 			CSMA/CAのバックオフアルゴリズムを用いてバックオフカウンタを1ずつ減らす．
 			その結果，最初にカウンタが0となったSTAが上り通信を行う．
-			このSTAをSTA $j^*$とする，
+			このSTAをSTA $j^*$とする．
 			この方法により，$p_{\rm u}^{(j)}$が大きいSTA，つまり式\eqref{eq:p1}，\eqref{eq:win}より$r^{(i^*,j)}$が大きいSTAほど${\rm CW}^{(i^*,j)}_{\rm u}$が小さくなり，
 			送信権を得やすくなる．
 			\par
 			続いて，STA $j^*$の送信電力制御を行う．
-			STA $j^*$は，STA $i^*$が送信したチャネル情報をもとに，STA $i$-STA $j$間の伝搬路を推定する．
+			STA $j^*$は，STA $i^*$が送信したチャネル情報をもとに，STA $i$--STA $j$間の伝搬路を推定する．
 			ここで，APからSTA $i^*$への半二重下り通信の場合のSNRを${\rm SNR}_{\rm d}^{(i^*,0)}$，
 			APとSTA $i^*$，$j^*$によるUFD通信におけるSTA $i^*$でのSINRを${\rm SINR}_{\rm d}^{(i^*,j^*)}$とすると，
 			STA $j^*$は
@@ -768,15 +778,15 @@ STAの送信機会を向上することで遅延を削減する．
 
 
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/numtx.eps, scale=0.9}
 				\caption{既存研究~\cite{promac}によるSTAの送信回数の分布}
 				\label{fig:numtx}
 			\end{figure}}\fi
 			式\eqref{eq:p1}からわかるように~\cite{promac}によるSTA決定手法では，
-			確率手な選択手法を用いているものの，
-			STA $i$，$j$間のユーザ間干渉が小さくスループット$\rij$が大きい組み合わせほど選ばれる確率が高くなるため，
+			確率的な選択手法を用いているものの，
+			STA $i$，STA $j$間のユーザ間干渉が小さくスループット$\rij$が大きい組み合わせほど選ばれる確率が高くなるため，
 			依然として一部の組み合わせに確率が集中し，特にSTAの上り通信において不公平性を生じる．
 			図\ref{fig:numtx}にSTA台数を$N=50$としたシステムで
 			既存研究~\cite{promac}による各STAの上り通信送信回数のシミュレーション結果を示す．
@@ -786,7 +796,7 @@ STAの送信機会を向上することで遅延を削減する．
 			そのSTAの実効スループットが低い場合，
 			そのSTAが送信機会を得るまでに大きな遅延が生じQoSの低下を招く可能性がある．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=fig/problem.eps, scale=0.9}
 				\caption{半二重通信とUFD通信におけるSTAの送信機会}
@@ -805,9 +815,9 @@ STAの送信機会を向上することで遅延を削減する．
 		提案方式ではFD-MAC方式\cite{fdmac}を用いて最適化を行う．
 		最適化はセカンダリセンダが送信するデータフレームの時間長を，プライマリセンダが送信予定のデータフレームの時間長に揃えることによって行う．
 		そのためにはセカンダリセンダがプライマリセンダが送信するデータフレームの時間長を知る必要がある．
-		以下，セカンダリセンダがプライマリセンダのデータフレームの時間長を知る手法，さらに，得られた時間長に対して自身のデータフレームの時間長を最適化する手法について述べる．
+		以下，セカンダリセンダがプライマリセンダのデータフレームの時間長を知る手法，更に，得られた時間長に対して自身のデータフレームの時間長を最適化する手法について述べる．
 		\par
-		FD-MAC方式では送信権を獲得した端末がプライマリセンダとしてRTSフレームを送信する．
+		FD-MAC方式では送信権を獲得したノードがプライマリセンダとしてRTSフレームを送信する．
 		セカンダリセンダはこのRTSフレームに含まれる情報からプライマリセンダが送信予定のデータフレームの時間長を知ることができる．
 		RTSフレームにはデュレーションフィールドと呼ばれる部分があり，そこには以下の値が格納されている．
 		\begin{equation}
@@ -828,7 +838,7 @@ STAの送信機会を向上することで遅延を削減する．
 		最適化の目標値，つまり，プライマリセンダのデータフレーム時間長が大きい場合は，
 		用いることができるデータフレームが多くなり，その組み合わせの数は膨大になる．
 		一方，最適化の目標値が小さい場合は，目標値よりも長いデータフレームは用いることができないため，組み合わせの数は少なくなる．
-		そこで，提案手法では最適化を粗い調整と細かい調整の2つの段階に分ける．
+		そこで，提案手法では最適化を粗い調整と細かい調整の二つの段階に分ける．
 		第一段階の粗い調整によって大まかにフレーム時間長を調整した後，細かな調整によって残ったフレーム時間長の差を最小化する．
 		\par
 		第一段階の粗い調整ではセカンダリセンダはバッファの先頭から順に$m$個のデータフレームをアグリゲーションする．
@@ -859,10 +869,10 @@ STAの送信機会を向上することで遅延を削減する．
 		第一段階では，バッファの先頭から$m+1$番目までのデータフレームをアグリゲーションするとプライマリセンダが送信するデータフレームの時間長を超えてしまことから，バッファの先頭から$m$番目までのデータフレームを用いることが決まる．
 		第二段階では，残ったプライマリセンダのフレーム時間長との差を$n$個以下のフレームで埋める．
 		このとき，バッファの$m+2$番目から最後までのデータフレームの一部が用いられる．
-		これら2つの段階で決定したデータフレームをアグリゲーションしたものがセカンダリセンダが送信するデータフレームとなる．
+		これら二つの段階で決定したデータフレームをアグリゲーションしたものがセカンダリセンダが送信するデータフレームとなる．
 		\par
 
-		\ifnum\value{flagFig}=1 {\begin{figure}[t]
+		\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 			\begin{center}
 				\includegraphics[width=0.8\textwidth]{fig/opti.eps}
 				\caption{How to optimize frame length on secondary sender.}
@@ -872,7 +882,7 @@ STAの送信機会を向上することで遅延を削減する．
 
 	\subsection{UFD通信におけるSTA選択}\label{sec:ufd_propose}
 		\subsubsection{公平性の改善}\label{sec:fair}
-			\ref{sec:ufd_pairing}項に述べたように既存研究のMACプロトコルでは干渉が小さい組み合わせが選ばれやすく，
+			\ref{sec:mac_problem}項に述べたように既存研究のMACプロトコルでは干渉が小さい組み合わせが選ばれやすく，
 			特定のSTAに送信機会が偏るという課題がある．
 			この問題を解決をするため以下の目的関数を提案する．
 			\begin{equation}
@@ -911,43 +921,43 @@ STAの送信機会を向上することで遅延を削減する．
 			低遅延を要求していないSTAの$\etau$を$x_j$だけ小さくし，
 			低遅延を要求するSTAの$\etau$を$x_j'$だけ大きくする．
 			ただし，$\mathcal D$は低遅延を要求するSTAのインデックス集合，
-			${\overline {\mathcal D}}\equiv{\mathcal N}/{\mathcal D}$とする．
+			${\overline {\mathcal D}}\equiv{\mathcal N}\backslash{\mathcal D}$とする．
 			また，式\eqref{eq:sub}は式\eqref{eq:feasible}を満たし可解性を失わないための条件である．
 			提案方式では以上のように新たに設定された${\hat \eta}_{\rm u}^{(j)}$を最適化問題の制約条件である式\eqref{eq:pu}に用いる．
 			これによって，低遅延を要求するSTAの送信機会が増加することで遅延時間が短縮されQoSが改善される．
 		\subsection{UFD通信と上りOFDMAの併用による遅延時間削減}\label{sec:ufd_ofdma}
 			前節では，低遅延を要求する一部のSTAに対して遅延時間削減によるQoS改善を行った．
-			本節では，全てのSTAの遅延時間削減に向け，UFD通信の上り通信へOFDMAを適用した無線LANと本無線LANにおける送受信STA選択手法を提案する．
+			本節では，全てのSTAの遅延時間削減に向け，UFD通信の上り通信へOFDMA方式を適用した無線LANと本無線LANにおける送受信STA選択手法を提案する．
 			図\ref{fig:ofdma}にシステムモデルを示す．
-			提案方式では，OFDMA導入により，送受信STAの選択において複数の上り通信STAを選択可能とし，
+			提案方式では，OFDMA方式の導入により，送受信STAの選択において複数の上り通信STAを選択可能とし，
 			STAの送信機会を向上することで遅延を削減する．
-			本論文では，前節で提案した送受信STA選択最適化問題を拡張し，上りOFDMAに対応したSTA選択を可能とする．
-			提案手法では，半二重通信，UFD通信，上りOFMDA，UFD通信と上りOFDMAの組み合わせの4つの通信方式を適応的に切り替え，STA選択を行う．
+			本論文では，前節で提案した送受信STA選択最適化問題を拡張し，上りOFDMA方式に対応したSTA選択を可能とする．
+			提案手法では，半二重通信，UFD通信，上りOFMDA方式，UFD通信と上りOFDMA方式の組み合わせの4つの通信方式を適応的に切り替え，STA選択を行う．
 			送受信STA組を適応的に選択することで，干渉が大きくUFD通信を行えないような位置にあるSTAは半二重通信を行い，
 			干渉が小さく，大きなスループットを期待できるSTAにはUFD通信を用い，
-			多くのSTAへ送信機会を与えたい場合はOFDMAを用いるといったような状況に応じた制御が可能となる．
+			多くのSTAへ送信機会を与えたい場合はOFDMA方式を用いるといったような状況に応じた制御が可能となる．
 			\par
-			ただし，OFDMAによる多元接続数は簡単のため2とする．
-			また，OFDMAに用いるチャネルは新たに用意するのではなく，
-			図\ref{fig:ufd_ofdma_channel}のようにAPが下り通信に用いるチャネルを2台のSTAが2等分して用いるものとする．
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			ただし，OFDMA方式による多元接続数は簡単のため2とする．
+			また，OFDMA方式に用いるチャネルは新たに用意するのではなく，
+			図\ref{fig:ufd_ofdma_channel}のようにAPが下り通信に用いるチャネルを2台のSTAが二等分して用いるものとする．
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=fig/ofdma.eps, scale=0.6}
-				\caption{UFD通信とOFDMAの組み合わせ}
+				\caption{UFD通信とOFDMA方式の組み合わせ}
 				\label{fig:ofdma}
 			\end{figure}}\fi
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=fig/channel.eps, scale=1.1}
-				\caption{UFD通信とOFDMAの組み合わせにおける各端末が使用する帯域}
+				\caption{UFD通信とOFDMA方式の組み合わせにおける各ノードが使用する帯域}
 				\label{fig:ufd_ofdma_channel}
 			\end{figure}}\fi
 			\subsubsection{STA選択手法の概要}\label{sec:pair_def}
 				本項では，提案手法の概要を述べる．
-				STA組決定手法は\ref{sec:fair}項で述べた手法をOFDMAを適用できるように拡張する．
+				STA組決定手法は\ref{sec:fair}項で述べた手法をOFDMA方式を適用できるように拡張する．
 				\par
 				本手法では，$N$台のSTAの中から，図\ref{fig:ofdma}のようにAPからの下り通信を受信するSTA $i$と，
-				APへの上り通信を行うSTA $j$，$k$を選び出す．
+				APへの上り通信を行うSTA $j$，STA $k$を選び出す．
 				このとき，STAの組み合わせを$\sijk$と表現し，$i,\ j,\ k \in \{0\}\cup \mN$とする．
 				STAは自己干渉除去技術を持たずBFD通信はできないとし，$i\neq0$のときには$i\neq j$かつ$i\neq k$とする．
 				また，$i$，$j$，$k$の全てが0になることはないものとする．
@@ -960,14 +970,14 @@ STAの送信機会を向上することで遅延を削減する．
 					\item $(i\neq0\land jk=0 \land j+k\neq0)\lor(i\neq0\land j=k\neq0)$\par
 					\hspace*{15pt}UFD通信
 					\item $i=0\land jk\neq0 \land j\neq k$\par
-					\hspace*{15pt}上りOFDMA
+					\hspace*{15pt}上りOFDMA方式
 					\item $i\neq0 \land jk\neq0 \land j\neq k$\par
-					\hspace*{15pt}UFD通信と上りOFDMAの組み合わせ
+					\hspace*{15pt}UFD通信と上りOFDMA方式の組み合わせ
 				\end{itemize}
 				\par
 
 				%\subsection{送受信STA組決定手法の概要}\label{sec:opt}
-				\ifnum\value{flagFig}=1 {\begin{figure}[t]
+				\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 					\centering
 					\epsfig{file=fig/proccess.eps, scale=0.7}
 					\caption{送受信STA選択手法の手順}
@@ -979,8 +989,8 @@ STAの送信機会を向上することで遅延を削減する．
 				%	&{\mathcal C}_{\rm UFD} \equiv \{\sijk : i,j\in{\mathcal N},\ i\neq j,\ r^{\sij}_{\rm d},\ r^{\sij}_{\rm u}>\epsilon\} \\
 				%	&{\mathcal C}_{\rm OFDMA} \equiv \{\sijk : i=0,\ jk\neq0\in{\mathcal N},\ r^{\sij}_{\rm d},\ r^{\sij}_{\rm u}>\epsilon\}
 				%\end{align}
-				本手法の手順は図\ref{fig:process}の通りである．
-				太枠で示した部分が，OFDMAの適用にあたって拡張を行った部分である．
+				図\ref{fig:process}に本手法のSTA選択手順を示す．
+				太枠で示した部分が，OFDMA方式の適用にあたって拡張を行った部分である．
 				本手法は各STA組毎の干渉の大きさや各STAの遅延時間をもとに，
 				通信方式の選択と送受信を行うSTA組を適応的に決定することで遅延時間の削減を行うことが目的である．
 				そのため，まずAPは全STA組に対してその組み合わせで通信が行われた場合の実効スループットを推定する．
@@ -998,17 +1008,17 @@ STAの送信機会を向上することで遅延を削減する．
 				APは下り通信の送信先となるSTA $i$を確率的に決定する．
 				選ばれたSTAをSTA $i^*$とし，APは送信先がSTA $i^*$であることを通知するため，データフレームのヘッダ部分を送信する．
 				続いて，全てのSTAはAPから通知された確率をもとにコンテンションウィンドウを設定し，
-				CSMA/CAのバックオフアルゴリズムを用いた競合を行い，STA $j$，$k$が順に決定される．
-				決定したSTAをそれぞれSTA $j^*$，$k^*$とし，
+				CSMA/CAのバックオフアルゴリズムを用いた競合を行い，STA $j$，STA $k$が順に決定される．
+				決定したSTAをそれぞれSTA $j^*$，STA $k^*$とし，
 				STA $j^*$は自身が送信権を獲得したことを通知するため，データフレームのヘッダ部分を送信する．
 				最後に，APとSTA $j^*$はデータフレームの残りの部分を，STA $k^*$はデータフレームを送信する．
 
 		\subsubsection{送受信STA組決定手法の詳細}
 			本節では前節で述べた各手順について詳細を述べる．
-			OFDMAを適用しSTA $k$を追加するために，最適化問題の拡張とSTA $k$の決定手順追加がなされている．
+			OFDMA方式を適用しSTA $k$を追加するために，最適化問題の拡張とSTA $k$の決定手順追加がなされている．
 			\par
 			まず，APは全ての組み合わせ$(i,j,k)$に対してスループット$r^{(i,j,k)}_{\rm d}$，$r^{(i,j,k)}_{\rm u1}$，$r^{(i,j,k)}_{\rm u2}$を推定する．
-			ただし，$r^{(i,j,k)}_{\rm d}$はAPからSTA $i$への下り通信の実効スループット，$r^{(i,j,k)}_{\rm u1}$，$r^{(i,j,k)}_{\rm u2}$はSTA $j$，$k$による上り通信の実効スループットである．
+			ただし，$r^{(i,j,k)}_{\rm d}$はAPからSTA $i$への下り通信の実効スループット，$r^{(i,j,k)}_{\rm u1}$，$r^{(i,j,k)}_{\rm u2}$はSTA $j$，STA $k$による上り通信の実効スループットである．
 			ここで，全組み合わせの集合から最低伝送速度の所要SINRを満たさない通信が含まれている組み合わせを除外した集合を通信方式毎に
 			${\mathcal C}'_{\rm half}$，${\mathcal C}'_{\rm full}$，
 			${\mathcal C}'_{\rm OFDMA}$，${\mathcal C}'_{\rm UFD+OFDMA}$とし，
@@ -1022,7 +1032,7 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{align}
 			とする．
 			APは$\rijk=r^{(i,j,k)}_{\rm d}+r^{(i,j,k)}_{\rm u1}+r^{(i,j,k)}_{\rm u2}$と，
-			上り通信を行うSTA $j$，$k$の送信待機時間$d^{(j)}$，$d^{(k)}$を用いて以下の最適化問題を解き,
+			上り通信を行うSTA $j$，STA $k$の送信待機時間$d^{(j)}$，$d^{(k)}$を用いて以下の最適化問題を解き,
 			各組み合わせで通信が行われる確率$p^{(i,j,k)}$を求める．
 			\begin{align}
 				&{\mathcal P}_3: && {\rm max} \sum_{(i,j,k)\in{\mathcal C}} p^{(i,j,k)}r^{(i,j,k)}(d^{(j)}+d^{(k)})^{\alpha} &&&&&&\\
@@ -1037,7 +1047,7 @@ STAの送信機会を向上することで遅延を削減する．
 			また，システムスループットとSTAの遅延時間の優先度を調整するため，
 			パラメータ$\alpha$を目的関数に導入し，$d^{(j)}$，$d^{(k)}$の影響の大小を調節できるようにする．
 			$\alpha$が大きいほど遅延時間を優先し，送信機会を得られていないSTAを含む組が選ばれやすくなる．
-			さらに，選ばれる確率が0となるSTA組が発生しないよう式\eqref{eq:etad}，\eqref{eq:etau}によって下限を設定する．
+			更に，選ばれる確率が0となるSTA組が発生しないよう式\eqref{eq:etad}，\eqref{eq:etau}によって下限を設定する．
 			第一の制約条件式\eqref{eq:etad}はあるSTA $i$が下り通信の送信先となる確率を$\eta_{\rm d}^{(i)}$以上とする条件であり，
 			第二の制約条件式\eqref{eq:etau}はあるSTA $l$がSTA $j$または$k$として上り通信を行う確率を$\eta_{\rm u}^{(l)}$以上とする条件である．
 			APによって算出された確率$\pijk$はビーコンフレームによって全てのSTAに通知される．
@@ -1045,7 +1055,7 @@ STAの送信機会を向上することで遅延を削減する．
 %			APは数回のビーコンフレーム送信毎に最新の$\rijk$，$d^{(j)}$，$d^{(k)}$をもとに最適化問題を解き，
 %			確率$\pijk$の更新を行う．
 			\par
-			次に，STA $i$，$j$，$k$を決定する．
+			次に，STA $i$，STA $j$，STA $k$を決定する．
 			まず最初に，APが下り通信の受信STAとなるSTA $i$の決定を行う．
 			APは以下の式に従って，各STAが下り通信の送信先となる確率$p_{\rm d}^{(i)}$を求める．
 			\begin{equation}
@@ -1085,12 +1095,12 @@ STAの送信機会を向上することで遅延を削減する．
 			以降STA $j$を決定する際と同様に${\rm CW}^{(i^*,j^*,k)}_{\rm u2}$，$w_{\rm u2}^{(i^*,j^*,k)}$を設定し，
 			最初にカウンタが0となったSTAが上り通信を行う2台目のSTAである．
 			このSTAをSTA $k^*$と呼ぶこととし，$k^*=0$のときはSTA $k$による上り通信は行われないことを示す．
-			また，$k^*=j^*$のときは上り通信にOFDMAを適用せずに1台のSTAによって上り通信が行われることを示す．
+			また，$k^*=j^*$のときは上り通信にOFDMA方式を適用せずに1台のSTAによって上り通信が行われることを示す．
 			これをもって，通信を行うSTAの組み合わせと通信方式が決定したこととなる．
 			組み合わせ決定後，AP，STA $j^*$はデータフレームの残りの部分を，STA $k^*$はデータフレームを送信する．
 
 		\subsubsection{計算時間の削減}\label{sec:time}
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=fig/time.eps, scale=0.9}
 				\caption{位置によるSTAのグループ分け}
@@ -1102,26 +1112,26 @@ STAの送信機会を向上することで遅延を削減する．
 			数百ミリ秒単位で最適化問題を解く必要がある．
 			提案方式の最適化問題は線形最適化問題であるが，Karmarkarの内点法~\cite{karmarkar}を用いる場合，
 			計算量は変数の数$n$に対して$O(n^{3.5})$であり，指数的に増加する．
-			変数の数は送受信STAの組み合わせの数$|{\mthcd}|$であり，STA台数を$N$台，OFDMAの多元接続数を$M$とすると，
+			変数の数は送受信STAの組み合わせの数$|{\mthcd}|$であり，STA台数を$N$台，OFDMA方式の多元接続数を$M$とすると，
 			最大で$(N+1)N^M-1$となる．
 			そのため，$N$，$M$が大きくなると計算量が爆発的に大きくなる．
 			\par
 			そこで，本論文では計算時間削減の初期検討として，選択可能なSTA組を制限する手法を検討する．
 			ある送受信STA組におけるスループットはユーザ間干渉が大きいほど減少する傾向にある．
-			また，ユーザ間干渉の大きさはSTAの地理的位置に依存し，STA $i$とSTA $j$，$k$との距離が遠いほど干渉が小さくなる傾向にある．
+			また，ユーザ間干渉の大きさはSTAの地理的位置に依存し，STA $i$とSTA $j$，STA $k$との距離が遠いほど干渉が小さくなる傾向にある．
 			そこで，STAを位置によってグループ分けし特定のSTA組に限定することで組み合わせの数を削減する．
 			\par
 			STAの組み合わせをユーザ間干渉が小さくなる可能性が高い組み合わせのみに限定するため，
-			下り通信を行うSTA $i$と上り通信を行う2台のSTA $j$，$k$がAPを中心として対角の位置に存在する組み合わせのみを最適化の対象とする．
+			下り通信を行うSTA $i$と上り通信を行う2台のSTA $j$，STA $k$がAPを中心として対角の位置に存在する組み合わせのみを最適化の対象とする．
 			図\ref{fig:time_image}のようにAPを中心とした直交座標を設定し，それぞれのSTAがどの象限に位置するかによって4つのグループに分ける．
-			そして，組み合わせの集合$\mthc$には，OFDMAとUFD通信を組み合わせる場合はSTA $i$と2台のSTA $j$，$k$は対角の象限，STA $j$と$k$は同じ象限に存在するような組み合わせ，UFD通信の場合はSTA$i$と$j$は対角の象限に存在する組み合わせのみを含める．
+			そして，組み合わせの集合$\mthc$には，OFDMA方式とUFD通信を組み合わせる場合はSTA $i$と2台のSTA $j$，STA $k$は対角の象限，STA $j$とSTA $k$は同じ象限に存在するような組み合わせ，UFD通信の場合はSTA$i$とSTA $j$は対角の象限に存在する組み合わせのみを含める．
 
 \section{シミュレーション評価}
 	\subsection{フレーム時間長最適化}
 		本節では，\ref{sec:frame_opt}節で述べたフレーム時間長最適化に関するシミュレーション評価について述べる．
 		まずシミュレーション条件を述べた後，シミュレーション結果を示す．
 		\subsubsection{シミュレーション条件}
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.7\textwidth]{graph/traffic.eps}
 					\caption{Packet size distribution used in simulations.}
@@ -1133,7 +1143,7 @@ STAの送信機会を向上することで遅延を削減する．
 			また，RTSフレームの同時送信による衝突を除いては，データフレームの送受信は成功するものとする．
 			AP，STAのMAC層に到着するデータフレームはポアソン分布に従い，その到着率をそれぞれ$\lambda_{\rm{AP}}$\,frames/s，
 			$\lambda_{\rm{STA}}$\,frames/sとする．
-			さらに，実際の無線LAN利用時におけるトラヒックは下り通信が支配的であることから，
+			更に，実際の無線LAN利用時におけるトラヒックは下り通信が支配的であることから，
 			$\lambda_{\rm{AP}}=10^{5}$として固定する~\cite{traffic}．
 			APとSTAに到着するIPパケット長は図\ref{fig:traffic}に示す分布に従う．
 			これは，実際に\cite{traffic}によって測定されたIPパケット長の分布を簡単化したものである．
@@ -1150,10 +1160,10 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{itemize}
 			これら3つの方式に対して，平均遅延時間，平均無駄時間，システムスループットの評価を行う．
 			遅延時間とはあるデータフレームが送信バッファに到着してから送信されるまでの時間であり，
-			無駄時間とは同時に送信される2つのデータフレームのうち一方の送信が完了し，半二重通信となっている時間を示す．
+			無駄時間とは同時に送信される二つのデータフレームのうち一方の送信が完了し，半二重通信となっている時間を示す．
 
 		\subsubsection{シミュレーション結果}
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/dly_max.eps}
 					\caption{$\lambda_{\rm AP}=\lambda_{\rm STA}=10^5$である場合におけるA-MSDUの最大長に対するSTAの平均遅延時間}
@@ -1165,11 +1175,11 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:dly_max}にA-MSDUの最大長に対する平均遅延時間を示す．
 			比較方式に比べて，$n=1$とした提案方式は遅延時間を13\%，制限を設けない提案方式は遅延時間を49\%削減している．
 			これは，$n=1$とした提案方式は比較方式と比べて最適化の第二段階でデータフレームを用いた分だけ遅延時間が減少し，
-			さらに，第二段階において用いるデータフレーム数に制限を設けない提案方式は，
+			更に，第二段階において用いるデータフレーム数に制限を設けない提案方式は，
 			第二段階で小さなデータフレームをたくさん用いることができ，
 			その結果，小さなデータフレームの遅延時間が大きく削減されるためである．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/wst_max.eps}
 					\caption{$\lambda_{\rm AP}=\lambda_{\rm STA}=10^5$の場合におけるA-MSDUの最大長に対する平均無駄時間}
@@ -1178,9 +1188,9 @@ STAの送信機会を向上することで遅延を削減する．
 			\end{figure}}\fi
 			次に，図\ref{fig:wst_max}にA-MSDUの最大長に対する平均無駄時間を示す．
 			比較方式には無駄時間が数十$\mu$s存在するのに対し，最適化の第二段階で$n=1$とした提案方式では無駄時間が数$\mu$sと97\%削減できている．
-			さらに，第二段階で制限を設けない提案方式では，$n=1$とした提案方式に比べて無駄時間を96\%削減できている．
+			更に，第二段階で制限を設けない提案方式では，$n=1$とした提案方式に比べて無駄時間を96\%削減できている．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/thr_max.eps}
 					\caption{$\lambda_{\rm AP}=\lambda_{\rm STA}=10^5$の場合におけるA-MSDUの最大長に対するシステムスループット}
@@ -1190,13 +1200,13 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:thr_max}にA-MSDUの最大長に対するシステムスループットを示す．
 			A-MSDUの最大長が2000\,Bの場合においては，最適化の第二段階で$n=1$とした提案方式は比較方式に対してシステムスループットを15\%増加させている．
 			一方で，第二段階に制限を設けない提案方式は，$n=1$とした提案方式と比較してシステムスループットをほとんど改善しない．
-			これは，ほとんどの送信機会において$n=1$とした提案方式が，無駄時間をIEEE 802.11n規格の無線LANで用いらているOFDMのシンボル長である$4\,\mu$以下にまで削減できているためである．
+			これは，ほとんどの送信機会において$n=1$とした提案方式が，無駄時間をIEEE 802.11n規格の無線LANで用いらているOFDM方式のシンボル長である$4\,\mu$以下にまで削減できているためである．
 			制限を設けない提案方式は$n=1$とした提案方式と比較してプライマリセンダとセカンダリセンダのフレーム時間長が完全に一致する割合が増えているものの，
 			その差は僅かであるためシステムスループットの改善幅は小さい．
 			\par
 			以上の結果から，本シミュレーション条件においては最適化に必要な時間を考慮すると，第二段階で用いるデータフレーム数の上限は$n=1$で良いと言える．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/dly_lmd.eps}
 					\caption{A-MSDUの最大長が7935\,Bである場合におけるSTAのフレーム到着率$\lambda_{\rm STA}$に対する平均遅延時間}
@@ -1209,7 +1219,7 @@ STAの送信機会を向上することで遅延を削減する．
 			比較方式に対して，$n=1$とした提案方式は遅延時間を最大で33\%，制限を設けない提案方式は遅延時間を45\%削減している．
 
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/wst_lmd.eps}
 					\caption{A-MSDUの最大長が7935\,Bである場合におけるSTAのフレーム到着率$\lambda_{\rm STA}$に対する平均無駄時間}
@@ -1219,9 +1229,9 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:wst_lmd}にSTAのフレーム到着率に対する平均無駄時間を示す．
 			$n=1$とした提案方式は，STAのフレーム到着率が$\lambda_{\rm STA}\geq 2 \times 10^{4}$の場合において，
 			無駄時間を比較方式に対して97\%削減できている．
-			さらに，制限を設けない提案方式は，$n=1$とした提案方式に対して無駄時間を96\%削減している．
+			更に，制限を設けない提案方式は，$n=1$とした提案方式に対して無駄時間を96\%削減している．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.8\textwidth]{graph/thr_lmd.eps}
 					\caption{A-MSDUの最大長が7935\,Bである場合におけるSTAのフレーム到着率$\lambda_{\rm STA}$に対するシステムスループット}
@@ -1257,7 +1267,7 @@ STAの送信機会を向上することで遅延を削減する．
 			上下通信ともに飽和トラヒックの場合を取り扱う．
 			シミュレーションは最適化問題はMATLABにより計算し，その他の部分はC言語で作成したシミュレータによって行う．
 
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\begin{center}
 					\includegraphics[width=0.5\textwidth]{fig/pos.eps}
 					\caption{APとSTAの配置の一例}
@@ -1265,7 +1275,7 @@ STAの送信機会を向上することで遅延を削減する．
 				\end{center}
 			\end{figure}}\fi
 
-			\begin{table}[t]
+			\begin{table}[htbp]
 				\centering
 				\caption{UFD通信におけるSTA選択手法に関するシミュレーションの諸元}
 				\label{tab:param}
@@ -1277,14 +1287,14 @@ STAの送信機会を向上することで遅延を削減する．
 					周波数帯 & 2.4\,GHz \\
 					帯域幅 & 20\,MHz \\
 					伝搬損失 & $30\log D + 40$\\
-					&($D$: 送受信点間距離)\\
+					&$D$: 送受信点間距離 (m)\\
 					自己干渉除去 & 110\,dB \\
 					シミュレーション時間 & 10\,s \\\hline
 				\end{tabular}
 			\end{table}
 
 		\subsubsection{シミュレーション結果}
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/numtxfair.eps, scale=0.9}
 				\caption{提案方式によるSTAの上り通信送信回数の分布}
@@ -1294,7 +1304,7 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:fair}に各STAの全シミュレーション時間内での上り通信送信回数を示す．
 			図\ref{fig:numtx}と比較して，一部のSTAが極端に選ばれやすいという現象が改善されていることがわかる．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/thr_fair.eps, scale=0.9}
 				\caption{重み係数$\alpha$に対するシステムスループットとfairness index}
@@ -1312,7 +1322,7 @@ STAの送信機会を向上することで遅延を削減する．
 			逆に，$\alpha$を大きくすることで送信待機時間の影響を相対的に大きくでき，公平性の改善を重視した結果となった．
 			また，本シミュレーションでは$\alpha\leq0.4$のときに既存研究と比較してシステムスループットの低下が小さく，公平性が高くなっている．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/chgnum.eps, scale=0.9}
 				\caption{STA台数を$N=30$に変更した場合の重み係数$\alpha$に対するシステムスループットとfairness index}
@@ -1335,10 +1345,10 @@ STAの送信機会を向上することで遅延を削減する．
 			概ね$0.1\leq\alpha\leq0.3$の範囲である．
 
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/chnx.eps, scale=0.9}
-				\caption{$x$に対する低遅延を要求するSTAの平均送信間隔}
+				\caption{$x$に対する低遅延を要求するSTA 46--50の平均遅延時間}
 				\label{fig:chnx}
 			\end{figure}}\fi
 			続いて，低遅延を要求するSTAのQoS向上について評価を行う．
@@ -1346,38 +1356,38 @@ STAの送信機会を向上することで遅延を削減する．
 			図\ref{fig:chnx}に$x$の値に対する低遅延を要求する5台のSTAの平均遅延時間を示す．
 			$x$とは低遅延を要求するSTAに低遅延を要求しないSTAが与える確率の値である．
 			$x=0$の時が既存方式~\cite{promac}を用いた場合の結果である．
-			既存研究と比較して，$x$を大きくするほど低遅延を要求する5台のSTAの平均送信間隔が小さくなっている．
+			既存研究と比較して，$x$を大きくするほど低遅延を要求する5台のSTAの平均遅延時間が小さくなっている．
 			この結果から，アプリーケーションサービスが要求する遅延時間に応じて遅延時間を調整可能であることがわかる．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
-				\subfloat[公平性の改善のみを行った場合のSTAの平均送信間隔]{
+				\subfloat[公平性の改善のみを行った場合の各STAの平均遅延時間]{
 					\epsfig{file=graph/interfair.eps, scale=0.9}
 					\label{fig:interfair}
 				}
 				\\
-				\subfloat[低遅延を要求するSTAの送信機会を増加させた場合のSTAの平均送信間隔]{
+				\subfloat[低遅延を要求するSTAの送信機会を増加させた場合の各STAの平均遅延時間]{
 					\epsfig{file=graph/intereta.eps, scale=0.9}
 					\label{fig:intereta}
 				}
-				\caption{STAの平均送信間隔の比較}
+				\caption{各STAの平均遅延時間の比較}
 				\label{fig:inter}
 			\end{figure}}\fi
 			次に$x=0.005$としたときのすべてのSTAの平均遅延時間について評価する．
 			図\ref{fig:inter}\subref{fig:interfair}に公平性のみを考慮した場合について，
 			図\ref{fig:inter}\subref{fig:intereta}に公平性とQoSの両方を考慮した場合について各STAの平均遅延時間を示す．
 			公平性のみを考慮した場合は全STA間の送信機会の公平性が高いことから，
-			送信間隔のばらつきが少ないが，低遅延を要求するSTA 46から50の遅延時間も平均43\,msと大きい．
-			一方，QoSを考慮した場合，送信間隔を15\,msと1/3程度まで削減することができた．
+			遅延時間のばらつきが少ないが，低遅延を要求するSTA 46から50の遅延時間も平均43\,msと大きい．
+			一方，QoSを考慮した場合，遅延時間を15\,msと1/3程度まで削減することができた．
 
-	\subsection{UFD通信と上りOFDMAの併用による遅延時間削減}
+	\subsection{UFD通信と上りOFDMA方式の併用による遅延時間削減}
 		\subsubsection{シミュレーション条件}
-			本項ではUFD通信と上りOFDMAの併用による遅延時間削減に関するシミュレーションの条件について述べる．
+			本項ではUFD通信と上りOFDMA方式の併用による遅延時間削減に関するシミュレーションの条件について述べる．
 			全節と同様，図\ref{fig:pos}のように，1台のAPが$L=100$\,m四方の領域の中心に設置され，その周りに$N=50$台のSTAがランダムに配置されているとする．
-			簡単のためOFDMAによる多元接続数は2とし，チャネル幅は2等分するものとする．
+			簡単のためOFDMA方式による多元接続数は2とし，チャネル幅は二等分するものとする．
 			式\eqref{eq:etad}における$\eta_{\rm d}^{(i)}$には各STA共通の$1/[(N+1)N]$を，
 			式\eqref{eq:etau}における$\eta_{\rm u}^{(l)}$には各STA共通の$1/(N+1)$を設定している．
-			伝送速度はIEEE 802.11aに従う~\cite{std}．
+			伝送速度はIEEE 802.11aに従う~\cite{stda}．
 			上下通信ともに飽和トラヒックであり，APには1500\,Bの，STAには64\,Bのデータフレームが発生しているものとする．
 			これは，トラヒックの多くがTCP-ACKを中心とする64\,B以下のフレームと1500\,Bのフレームによって占められるからである~\cite{traffic}．
 			\par
@@ -1385,18 +1395,18 @@ STAの送信機会を向上することで遅延を削減する．
 			\begin{itemize}
 				\item 半二重通信のみを用いる方式
 				\item 半二重通信とUFD通信を併用する\ref{sec:fair}項で提案した方式（比較方式）
-				\item 半二重通信，UFD通信，上りOFDMA，UFD通信と上りOFDMAの組み合わせの4方式を用いる提案方式
+				\item 半二重通信，UFD通信，上りOFDMA方式，UFD通信と上りOFDMA方式の組み合わせの4方式を用いる提案方式
 				\item 提案方式に\ref{sec:time}項で述べた計算時間削減手法を適用した方式
 			\end{itemize}
 
 		\subsubsection{シミュレーション結果}
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/delay.eps, scale=0.9}
 				\caption{上り通信の平均遅延時間}
 				\label{fig:delay}
 				\end{figure}}\fi
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/thr.eps, scale=0.9}
 				\caption{システムスループット}
@@ -1412,19 +1422,19 @@ STAの送信機会を向上することで遅延を削減する．
 			提案方式はシステムスループットは低下したものの，半二重通信に対しては3倍程度の値を維持しつつ，
 			遅延時間を半二重通信と同等まで削減することができた．
 			\par
-			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 				\centering
 				\epsfig{file=graph/cdf.eps, scale=0.9}
 				\caption{ある試行における各STAの平均遅延時間のCDF}
 				\label{fig:cdf}
 			\end{figure}}\fi
-			STA間の公平性を確認するため，図\ref{fig:cdf}に各STA毎の平均遅延時間のCDF（Cumulative distribution functioin）を示す．
+			STA間の公平性を確認するため，図\ref{fig:cdf}に各STA毎の平均遅延時間のCDF（Cumulative distribution function）を示す．
 			半二重通信では全STAが平等に送信機会を獲得するため，STA間の遅延時間のばらつきは非常に小さい．
 			提案方式は半二重通信には及ばないものの，半二重通信とUFD通信を用いる方式と比べて大幅にばらつきが小さくなっており，
 			遅延時間に対する公平性が高いことを示している，
 
 
-%			\ifnum\value{flagFig}=1 {\begin{figure}[t]
+%			\ifnum\value{flagFig}=1 {\begin{figure}[htbp]
 %				\centering
 %				\epsfig{file=graph/thr_time.eps, scale=0.6}
 %				\caption{システムスループットへの計算時間削減手法の影響}
@@ -1432,7 +1442,7 @@ STAの送信機会を向上することで遅延を削減する．
 %			\end{figure}}\fi
 
 			\par
-			\begin{table}[t]
+			\begin{table}[htbp]
 				\centering
 				\caption{最適化問題を1回解くために必要な平均時間}
 				\label{tab:time}
@@ -1449,40 +1459,40 @@ STAの送信機会を向上することで遅延を削減する．
 			簡易な方式ながら，システムスループットを大幅に低下させることなく，計算時間を削減することができた．
 
 \section{まとめ}
-	本論文では，無線LANの大容量化を実現する方法の1つとしての全二重通信無線LANに関して問題を指摘し，
+	本論文では，無線LANの大容量化を実現する方法の一つとしての全二重通信無線LANに関して問題を指摘し，
 	その解決策としての提案とその性能評価を行った．
 	\par
-	\ref{sec:mac_problem}節では，既存の全二重通信無線LANにむけたMACプロトコルにおいて，
-	同時に送信される2つのデータフレームの時間長が異なる際に，一方のデータフレームの送信が先に完了してしまい，
+	\ref{sec:mac_problem}項では，既存の全二重通信無線LANにむけたMACプロトコルにおいて，
+	同時に送信される二つのデータフレームの時間長が異なる際に，一方のデータフレームの送信が先に完了してしまい，
 	半二重通信状態となってしまう無駄時間が発生すること，
-	それによりスループットの低下や他のフレームとの衝突が生じるという問題を指摘した．
+	それによりスループットの低下や他のフレームとの衝突が生じるという課題を指摘した．
 	それに対し，\ref{sec:frame_opt}節においてフレーム時間長最適化を提案した．
 	提案したフレーム時間長最適化は最適化問題を解くことで，フレームアグリゲーションを用いて連結するデータフレームを選び出し，
-	同時に送信される2つのデータフレームの時間長の差を最小化する．
+	同時に送信される二つのデータフレームの時間長の差を最小化する．
 	シミュレーション評価により，比較方式と比較して無駄時間を最大97\%削減し，システムスループットを15\%改善した．
-	また，本論文で行ったシミュレーションにおいては，最適化の第二段階で用いるデータフレーム数は1つ以下で十分であることを示した．
+	また，本論文で行ったシミュレーションにおいては，最適化の第二段階で用いるデータフレーム数は1個以下で十分であることを示した．
 	\par
-	さらに，\ref{sec:ufd_pairing}節ではUFD通信におけるSTA組の選択手法について，
+	更に，\ref{sec:mac_problem}項ではUFD通信におけるSTA組の選択手法について，
 	既存研究では公平性が低いこととQoSについての議論がなされていないこと，
 	半二重通信と比較して遅延時間が大きいことを指摘した．
-	それに対し，\ref{sec:ufd_propose}節では，最適化問題の目的関数においてSTAの送信待機時間を考慮することで公平性を改善する手法を提案した．
+	不公平性とQoSの課題に対し，\ref{sec:ufd_propose}節では，最適化問題の目的関数においてSTAの送信待機時間を考慮することで公平性を改善する手法を提案した．
 	また，STAの送信確率の最低値を再設定することで低遅延を要求する一部のSTAのQoSを改善する手法を提案した．
 	シミュレーション評価により，既存方式~\cite{promac}と比較して公平性を大きく改善し，
-	さらに，トレードオフの関係にあるシステムスループットと公平性のバランスを調整できることを示した．
+	更に，トレードオフの関係にあるシステムスループットと公平性のバランスを調整できることを示した．
 	加えて，STAの送信確率の最低値を再設定することで一部のSTAの遅延時間を大きく削減し，QoSが改善できることを明らかにした．
 	\par
 	続いて，\ref{sec:ufd_ofdma}節で，全てのSTAの遅延時間を削減するために，
-	\ref{sec:ufd_propose}節で提案したUFD通信の上り通信にOFDMAを適用することを提案した．
-	UFD通信のSTA選択手法を拡張し上り通信にOFDMAを適用し最適化問題を解くことで，
-	半二重通信，UFD通信，上りOFMDA，UFD通信と上りOFDMAの組み合わせの4つの通信方式の適応的な切り替えるを可能にした．
+	\ref{sec:ufd_propose}節で提案したUFD通信の上り通信にOFDMA方式を適用することを提案した．
+	UFD通信のSTA選択手法を拡張し上り通信にOFDMA方式を適用し最適化問題を解くことで，
+	半二重通信，UFD通信，上りOFMDA，UFD通信と上りOFDMA方式の組み合わせの4つの通信方式の適応的な切り替えるを可能にした．
 	送受信STA組を適応的に選択することで，干渉が大きくUFD通信を行えないような位置にあるSTAは半二重通信を行い，
 	干渉が小さく，大きなスループットを期待できるSTAにはUFD通信を用い，
-	多くのSTAへ送信機会を与えたい場合はOFDMAを用いるといったような状況に応じた制御が可能となる．
+	多くのSTAへ送信機会を与えたい場合はOFDMA方式を用いるといったような状況に応じた制御が可能となる．
 	また，最適化問題を解くための計算時間を削減する手法に関して検討を行った．
 	STAをAPに対する位置によって分類し，ユーザ間干渉が小さくなる可能性が高いSTA組のみを対象として最適化問題を解くことで，
 	計算時間の削減を図った．
 	シミュレーション評価により，STAの遅延時間を半二重通信と同程度まで削減することができることを示し，
-	さらに，計算時間削減手法により計算時間を72\%削減できることを示した．
+	更に，計算時間削減手法により計算時間を72\%削減できることを示した．
 
 
 \acknowledgments				% 謝辞
